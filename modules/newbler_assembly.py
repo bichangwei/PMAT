@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+https://github.com/bichangwei/PMAT
+
+This is part of the PMAT. Assembly of the error corrected data using Newbler.
+"""
+
+from log import Log
+import os
+import subprocess
+from check_file import remove_file, rename_file
+
+log = Log()
+
+def run_newbler(cpu, assembly_seq, output_path, mi=90, ml=40):
+
+    # runAssembly_container = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../container/runAssembly.sif")
+    if os.path.exists(os.path.abspath(os.path.dirname(__file__) + "/../container/runAssembly.sif")):
+        runAssembly_container = os.path.join(os.path.abspath(os.path.dirname(__file__) + "/../container"), "runAssembly.sif")
+    else:
+        runAssembly_container = os.path.join(os.path.abspath(os.path.dirname(__file__) + "/container"), "runAssembly.sif")
+    log.get_path(f'The path of Newbler : {runAssembly_container}')
+    
+    log.section_header("Reads assembly start...")
+
+    newbler_output = f'{output_path}/assembly_result'
+
+    command = f'singularity exec {runAssembly_container} runAssembly -cpu {cpu} -het -sio -m -urt -large -s 100 -nobig -mi {mi} -ml {ml} -o {newbler_output} {assembly_seq}'.split(' ')
+    newbler_process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # Loop over stdout and stderr in real-time and print the output    
+    # with open(f'{logfile}/newbler.log', 'w') as newblerlog:
+    for line in iter(newbler_process.stdout.readline, b''):
+        log.log(line.decode().strip().replace('\r', ''))
+        # newblerlog.write(line.decode().strip().replace('\r', '')+'\n')
+
+    for line in iter(newbler_process.stderr.readline, b''):
+        log.log(line.decode().strip().replace('\r', ''))
+        # newblerlog.write(line.decode().strip().replace('\r', '')+'\n')
+    newbler_process.communicate()
+
+    log.section_tail("Reads assembly end.")
+    log.get_path(f'Assembly results path : {newbler_output}')
+
+    rename_file(f'{newbler_output}/454AllContigs.fna', f'{newbler_output}/PMATAllContigs.fna')
+    rename_file(f'{newbler_output}/454ContigGraph.txt', f'{newbler_output}/PMATContigGraph.txt')
+
+    for rmopt in [os.path.join(newbler_output, opt) for opt in os.listdir(newbler_output) if opt.startswith('454')]:
+        remove_file(rmopt)
+
+    assembly_output = newbler_output
+
+    return assembly_output
+
+if __name__ == '__main__':
+      run_newbler()
+
+import os
+os.path.exists(os.path.abspath(os.path.join(os.path.dirname('/home/hanfc/pub/Linux_001/workspace/mitogenome/Litsea_cubeba/Canu_newbler/script/PMAT/script/ste.txt')) + "/../container/runAssembly.sif"))
