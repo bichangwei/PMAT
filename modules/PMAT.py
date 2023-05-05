@@ -576,8 +576,8 @@ if __name__ == '__main__':
     #--------------------------------------------------------------------------
     graphBuild_description = f"Structure assembly based on Newbler output\n\n{log.blue('For more information about PMAT, see https://github.com/bichangwei/PMAT')}\n\n"
     graphBuild_example = """Example:
-    PMAT gfa -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs 4G -o output
-    PMAT gfa -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs hifi.cut20k.fa -s 1 6 8 -o output"""
+    PMAT graphBuild -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs 4G -o output
+    PMAT graphBuild -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs hifi.cut20k.fa -s 1 6 8 -o output"""
     
     graphBuild_sub = subparsers.add_parser('graphBuild', description=graphBuild_description + graphBuild_example, formatter_class=argparse.RawTextHelpFormatter)
     
