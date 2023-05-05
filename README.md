@@ -3,16 +3,20 @@
 ## Installation
 
 #### install by using git
+```
     git clone https://github.com/bichangwei/PMAT.git
     cd PMAT/bin
     chmod a+x PMAT
     PMAT --help
+```
 
 #### install from source
+```
     unzip PMAT-main.zip
     cd PMAT/bin
     chmod a+x PMAT
     PMAT --help
+```
 
 ## Repuirement
 
@@ -74,8 +78,8 @@ Run `PMAT --help` to view the progran's help documentation .
 
     notes:
 
-        When using the all command, canu and NextDenovo software are required. Please installed in the
-        PATH or provide the -cp and -np.
+        When using the all command, canu and NextDenovo software are required. Please installed  
+        in the PATH or provide the -cp and -np.
         
 
 - graphBuild -- Structure assembly based on Newbler results.
@@ -88,7 +92,8 @@ Run `PMAT --help` to view the progran's help documentation .
     ```
     notes:
     
-        When using the graphBuild command, the blastn is required and needs to be installed in the PATH.
+        When using the graphBuild command, the blastn is required and needs to be installed  
+        in the PATH.
     
 ## Version
 PMAT version 1.10 (2023.05.05)
