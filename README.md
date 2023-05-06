@@ -1,5 +1,5 @@
 # PMAT - an efficient assembly tool for plant mitochondrial genome
-<p align="center"><img src="misc/logo.png" alt="Unicycler" width="600"></p>
+<p align="center"><img src="misc/logo.png" alt="PMAT" width="600"></p>
 
 PMAT is an efficient tool for mitochondrial genome assembly. It can correct three-generation sequencing data using [canu](https://github.com/marbl/canu) or [NextDenovo](https://github.com/Nextomics/NextDenovo) and then use [Newbler](https://evomics.org/learning/assembly-and-alignment/newbler/) to assemble it, and it will find the mitochondrial genome sequence and generate the mitochondrial genome structure.
 
