@@ -53,9 +53,3 @@ def run_newbler(cpu, assembly_seq, output_path, mi=90, ml=40):
     assembly_output = newbler_output
 
     return assembly_output
-
-if __name__ == '__main__':
-      run_newbler()
-
-import os
-os.path.exists(os.path.abspath(os.path.join(os.path.dirname('/home/hanfc/pub/Linux_001/workspace/mitogenome/Litsea_cubeba/Canu_newbler/script/PMAT/script/ste.txt')) + "/../container/runAssembly.sif"))
