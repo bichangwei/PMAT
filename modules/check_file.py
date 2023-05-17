@@ -52,3 +52,5 @@ def remove_file(pathname):
 def rename_file(old_pathnm, new_pathnm=False):
     if os.path.exists(old_pathnm):
         os.rename(old_pathnm, new_pathnm)
+
+# print(check_file_format('/home/hanfc/pub/Linux_002/workspace/Lour_data/PicBio/sample/SCZ/m54059_161226_153304.subreads.sample.fq.gz'))

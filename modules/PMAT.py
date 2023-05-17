@@ -15,7 +15,10 @@ import shutil
 import argparse
 import time
 import gzip
-sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../modules'))
+if shutil.which('PMAT'):
+    sys.path.append(os.path.join(os.path.dirname(shutil.which('PMAT')), '../modules'))
+else:
+    sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../modules'))
 import find_condidate_seeds
 import seeds_extension
 import assembly_graph

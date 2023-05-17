@@ -10,6 +10,7 @@ seeds. Ensure that blastn is installed and can be called
 directly in the environment variables.
 '''
 
+import shutil
 import subprocess
 import os
 import re
@@ -17,7 +18,9 @@ import argparse
 import time
 from log import Log
 
-if os.path.exists(os.path.abspath(os.path.dirname(__file__) + '/../Conserved_PCGs_db/Plant_conserved_mtgene_nt.fa')):
+if shutil.which("PMAT"):
+    db_path = os.path.join(os.path.abspath(os.path.dirname(shutil.which("PMAT")) + '/../Conserved_PCGs_db'), "Plant_conserved_mtgene_nt.fa")
+elif os.path.exists(os.path.abspath(os.path.dirname(__file__) + '/../Conserved_PCGs_db/Plant_conserved_mtgene_nt.fa')):
     db_path = os.path.join(os.path.abspath(os.path.dirname(__file__) + '/../Conserved_PCGs_db'), "Plant_conserved_mtgene_nt.fa")
 else:
     db_path = os.path.join(os.path.abspath(os.path.dirname(__file__) + '/Conserved_PCGs_db'), "Plant_conserved_mtgene_nt.fa")

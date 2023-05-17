@@ -114,3 +114,7 @@ def subsample(output, corrected_seq, factor, seed=6):
         assembly_seq_path = assembly_seq
 
     return assembly_seq_path
+
+if __name__ == '__main__':
+    factor = float(sys.argv[3])
+    subsample(sys.argv[1], sys.argv[2], factor)

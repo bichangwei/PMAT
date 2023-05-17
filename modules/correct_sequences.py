@@ -139,3 +139,9 @@ class ReadsPreprocess:
         task = run_cfg['General']['task']
         genomeSize = run_cfg['correct_option']['genome_size']
         return abs_workdir, task, genomeSize
+    
+    
+if __name__ == '__main__':
+    # ReadsPreprocess('/home/hanfc/software/canu-2.2/canu-2.2/bin/canu', '30', 'pacbio', './canu_test').canu_correct('100M', '/home/hanfc/pub/Linux_002/workspace/Lour_data/PicBio/sample/SCZ/m54059_161226_153304.subreads.fq.gz /home/hanfc/pub/Linux_002/workspace/Lour_data/PicBio/sample/m54059_161221_221131.subreads.fq.gz')
+    ReadsPreprocess('/home/hanfc/software/canu-2.2/canu-2.2/bin/canu', '30', 'nanopore', '/home/hanfc/pub/Linux_001/workspace/mitogenome/Litsea_cubeba/Canu_newbler/script/debbug/nextDenovo_test', './test_data/run.cfg').NextDenovo_correct('/home/hanfc/software/NextDenovo/nextDenovo')
+    # ReadsPreprocess('/home/hanfc/software/canu-2.2/canu-2.2/bin/canu', '30', 'pacbio', './canu_test').canu_trim('1.2G', '/home/hanfc/pub/Linux_001/workspace/mitogenome/Litsea_cubeba/Canu_newbler/1.canu_output/Lour.correctedReads.10G.fasta')
