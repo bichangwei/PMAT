@@ -9,7 +9,7 @@ if the input data is HiFi then directly assembled, otherwise need to
 correct errors first.
 '''
 
-import configparser
+# import configparser
 import subprocess
 import os 
 from log import Log
@@ -132,16 +132,18 @@ class ReadsPreprocess:
 
     
     def config_info(self):
-        run_cfg = configparser.ConfigParser()
-        run_cfg.read(self.cfg)
-        workdir = run_cfg['General']['workdir']
+        run_cfg = {}
+        with open(self.cfg, 'r') as fin:
+            for line in fin.readlines():
+                if "=" in line:
+                    run_cfg[line.split('=')[0].strip()] = line.split('=')[1].strip()
+        # run_cfg = configparser.ConfigParser()
+        # run_cfg.read(self.cfg)
+        # workdir = run_cfg['General']['workdir']
+        workdir = run_cfg['workdir']
         abs_workdir = os.path.join(os.path.dirname(os.path.abspath(self.cfg)), workdir)
-        task = run_cfg['General']['task']
-        genomeSize = run_cfg['correct_option']['genome_size']
+        # task = run_cfg['General']['task']
+        task = run_cfg['task']
+        # genomeSize = run_cfg['correct_option']['genome_size']
+        genomeSize = run_cfg['genome_size']
         return abs_workdir, task, genomeSize
-    
-    
-if __name__ == '__main__':
-    # ReadsPreprocess('/home/hanfc/software/canu-2.2/canu-2.2/bin/canu', '30', 'pacbio', './canu_test').canu_correct('100M', '/home/hanfc/pub/Linux_002/workspace/Lour_data/PicBio/sample/SCZ/m54059_161226_153304.subreads.fq.gz /home/hanfc/pub/Linux_002/workspace/Lour_data/PicBio/sample/m54059_161221_221131.subreads.fq.gz')
-    ReadsPreprocess('/home/hanfc/software/canu-2.2/canu-2.2/bin/canu', '30', 'nanopore', '/home/hanfc/pub/Linux_001/workspace/mitogenome/Litsea_cubeba/Canu_newbler/script/debbug/nextDenovo_test', './test_data/run.cfg').NextDenovo_correct('/home/hanfc/software/NextDenovo/nextDenovo')
-    # ReadsPreprocess('/home/hanfc/software/canu-2.2/canu-2.2/bin/canu', '30', 'pacbio', './canu_test').canu_trim('1.2G', '/home/hanfc/pub/Linux_001/workspace/mitogenome/Litsea_cubeba/Canu_newbler/1.canu_output/Lour.correctedReads.10G.fasta')
