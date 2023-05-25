@@ -23,19 +23,18 @@ PMAT is an efficient tool for mitochondrial genome assembly. It can correct thre
 
 ## Repuirement
 
-###### When inputting hifi reads the following software is required:
+###### When inputting HiFi reads, the following software are required:
 - [**blastn**](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)  Needs to be installed in the `PATH`.
 - [**singularity**](https://github.com/YanshuQu/runAssembly)
 
-###### When inputting clr or ont reads the following software is required:
+###### When inputting CLR or ONT reads, the following software are required:
 
 - [**blastn**](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)     Needs to be installed in the `PATH`.
-- [**canu**](https://github.com/marbl/canu)
-- [**NextDenovo**](https://github.com/Nextomics/NextDenovo)
+- [**canu**](https://github.com/marbl/canu) or [**NextDenovo**](https://github.com/Nextomics/NextDenovo)
 - [**singularity**](https://github.com/YanshuQu/runAssembly)
 
 ## options and usage
-Run `PMAT --help` to view the progran's help documentation .
+Run `PMAT --help` to view the program's help documentation.
 
     usage: PMAT <command> <arguments>
     
