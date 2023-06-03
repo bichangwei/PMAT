@@ -518,6 +518,7 @@ if __name__ == '__main__':
     all_description = f"PMAT: an efficient assembly tool for plant mitochondrial genome\n\n{log.blue('For more information about PMAT, see https://github.com/bichangwei/PMAT')}\n\n"
     
     all_example = """Example:
+    # If canu or NextDenovo is not installed in the PATH you need to provide the parameter -cp or -np.
     For HiFi data    : PMAT all -i hifi.fastq.gz -o hifi_assembly -st hifi -g 500M
     For ONT raw data : PMAT all -i ont.fastq.gz -o ont_assembly -st ont -cfg ont_correct.cfg -tk all -g 500M
     For CLR raw data : PMAT all -i ont.fastq.gz -o clr_assembly -st clr -cfg clr_correct.cfg -tk all -g 500M
@@ -561,7 +562,7 @@ if __name__ == '__main__':
     optional_group.add_argument('-ml', '--minoverlaplen', type=int, required=False, default=40,
                                 help='set minimum overlap length. Default:40')
     optional_group.add_argument('-mi', '--minidentity', type=int, required=False, default=90,
-                                help='set minimum overlap identify. Default:90')
+                                help='set minimum overlap identification. Default:90')
     optional_group.add_argument('-cpu',type=int, required=False, default=8,
                                 help='cpus to use. Default: 8')
     # optional_group.add_argument("-s","--seeds",required=False, nargs='+',

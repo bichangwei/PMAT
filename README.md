@@ -30,7 +30,7 @@ PMAT is an efficient tool for mitochondrial genome assembly. It can correct thre
 ###### When inputting CLR or ONT reads, the following software are required:
 
 - [**blastn**](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)     Needs to be installed in the `PATH`.
-- [**canu**](https://github.com/marbl/canu) or [**NextDenovo**](https://github.com/Nextomics/NextDenovo)
+- [**canu**](https://github.com/marbl/canu) or [**NextDenovo**](https://github.com/Nextomics/NextDenovo)    Suggested to be installed in the `PATH`.
 - [**singularity**](https://github.com/YanshuQu/runAssembly)
 
 ## options and usage
@@ -73,6 +73,7 @@ Run `PMAT --help` to view the program's help documentation.
 
     Example:
     ```
+        # If canu or NextDenovo is not installed in the PATH you need to provide the parameter -cp or -np.
         For HiFi data    : PMAT all -i hifi.fastq.gz -o hifi_assembly -st hifi -g 500M
         For ONT raw data : PMAT all -i ont.fastq.gz -o ont_assembly -st ont -cfg ont_correct.cfg -tk all -g 500M
         For CLR raw data : PMAT all -i ont.fastq.gz -o clr_assembly -st clr -cfg clr_correct.cfg -tk all -g 500M
