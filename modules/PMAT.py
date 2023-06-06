@@ -37,12 +37,15 @@ from progressbar import ProgressBar, ProgressBar, Percentage, Bar
 def all(args):
     start_time = time.time()
 
-    if args.canu:
-        CANU_PATH = args.canu
-    elif shutil.which('canu'):
-        CANU_PATH = 'canu'
+    if args.seqtype.lower() == 'hifi':
+        pass
     else:
-        log.Warning('Please check if canu is installed or provide --canu')
+        if args.canu:
+            CANU_PATH = args.canu
+        elif shutil.which('canu'):
+            CANU_PATH = 'canu'
+        else:
+            log.Warning('Please check if canu is installed or provide --canu')
 
     if args.correctsoft:
         if args.correctsoft.lower() == 'nextdenovo':
