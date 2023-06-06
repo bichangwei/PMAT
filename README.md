@@ -1,7 +1,7 @@
 # PMAT - an efficient assembly toolkit for plant mitochondrial genome
 <p align="center"><img src="misc/logo.png" alt="PMAT" width="600"></p>
 
-PMAT is an efficient tool for mitochondrial genome assembly. It can correct three-generation sequencing data using [canu](https://github.com/marbl/canu) or [NextDenovo](https://github.com/Nextomics/NextDenovo) and then use [Newbler](https://evomics.org/learning/assembly-and-alignment/newbler/) to assemble it, and it will find the mitochondrial genome sequence and generate the mitochondrial genome structure.
+PMAT is an efficient tool for mitochondrial genome assembly. It can correct three-generation sequencing data using [canu](https://github.com/marbl/canu) or [NextDenovo](https://github.com/Nextomics/NextDenovo) and then use [Newbler](https://evomics.org/learning/assembly-and-alignment/newbler/) to assemble it. Finally, PMAT can identify mitochondrial genome sequences and generate mitochondrial genome structures.
 
 ## Installation
 
@@ -34,7 +34,7 @@ PMAT is an efficient tool for mitochondrial genome assembly. It can correct thre
 - [**singularity**](https://github.com/YanshuQu/runAssembly)
 
 ## options and usage
-Run `PMAT --help` to view the program's help documentation.
+Run `PMAT --help` to view the program's usage guide.
 
     usage: PMAT <command> <arguments>
     
@@ -67,13 +67,13 @@ Run `PMAT --help` to view the program's help documentation.
 
 ## Tips
 
-- all -- De novo analysis of sequencing data (hifi, clr and ont).
+- **all** -- De novo analysis of sequencing data (hifi, clr and ont).
     
-    run `PMAT all --help` view the help documentation for the command all.
+    run `PMAT all --help` view the usage guide for the all command.
 
     Example:
     ```
-        # If canu or NextDenovo is not installed in the PATH, you need provide the parameter -cp or -np.
+        # If canu or NextDenovo is not installed in the PATH when using clr or ont data, you need to provide the parameter -cp or -np.
         For HiFi data    : PMAT all -i hifi.fastq.gz -o hifi_assembly -st hifi -g 500M
         For ONT raw data : PMAT all -i ont.fastq.gz -o ont_assembly -st ont -cfg ont_correct.cfg -tk all -g 500M
         For CLR raw data : PMAT all -i ont.fastq.gz -o clr_assembly -st clr -cfg clr_correct.cfg -tk all -g 500M
@@ -83,12 +83,13 @@ Run `PMAT --help` to view the program's help documentation.
 
     notes:
 
-        When using the all command, canu and NextDenovo software are required. Please installed  
-        in the PATH or provide the -cp and -np.
+      1. Make sure blastn is installed in the PATH.
+      2. If canu or NextDenovo is not installed in the PATH when using clr or ont data,   
+         you need to provide the parameter -cp or -np.
         
 
-- graphBuild -- Structure assembly based on Newbler results.
-    run `PMAT graphBuild --help` view the help documentation for the command graphBuild.
+- **graphBuild** -- Structure assembly based on Newbler results.
+    run `PMAT graphBuild --help` view the usage guide for the graphBuild command.
 
     Example:
     ```
