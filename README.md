@@ -6,7 +6,7 @@ PMAT is an efficient tool for mitochondrial genome assembly. It can correct thre
 ## Installation
 
 #### install by using git
-```
+```shell
     git clone https://github.com/bichangwei/PMAT.git
     cd PMAT/bin
     chmod a+x PMAT
@@ -14,7 +14,7 @@ PMAT is an efficient tool for mitochondrial genome assembly. It can correct thre
 ```
 
 #### install from source
-```
+```shell
     unzip PMAT-main.zip
     cd PMAT/bin
     chmod a+x PMAT
@@ -91,7 +91,7 @@ Run `PMAT --help` to view the program's usage guide.
     run `PMAT graphBuild --help` view the usage guide for the graphBuild command.
 
     Example:
-    ```
+    ```shell
         PMAT graphBuild -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs 4G -o output
         PMAT graphBuild -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs hifi.cut20k.fa -s 1 6 8 -o output
     ```
