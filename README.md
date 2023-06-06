@@ -84,8 +84,7 @@ Run `PMAT --help` to view the program's usage guide.
     notes:
 
       1. Make sure blastn is installed in the PATH.
-      2. If canu or NextDenovo is not installed in the PATH when using clr or ont data,   
-         you need to provide the parameter -cp or -np.
+      2. If canu or NextDenovo is not installed in the PATH when using clr or ont data, you need to provide the parameter -cp or -np.
         
 
 - **graphBuild** -- Structure assembly based on Newbler results.
@@ -98,8 +97,7 @@ Run `PMAT --help` to view the program's usage guide.
     ```
     notes:
     
-        When using the graphBuild command, the blastn is required and needs to be installed  
-        in the PATH.
+        When using the graphBuild command, the blastn is required and needs to be installed in the PATH.
     
 ## Version
 PMAT version 1.10 (2023.05.05)
