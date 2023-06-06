@@ -34,6 +34,8 @@ PMAT is an efficient tool for mitochondrial genome assembly. It can correct thre
 - [**singularity**](https://github.com/YanshuQu/runAssembly)
 
 ## options and usage
+
+```shell
 Run `PMAT --help` to view the program's usage guide.
 
     usage: PMAT <command> <arguments>
@@ -63,7 +65,7 @@ Run `PMAT --help` to view the program's usage guide.
         all         an efficient assembly tool for plant mitochondrial genome
     
         graphBuild  Structure assembly based on Newbler output
-
+```
 
 ## Tips
 
