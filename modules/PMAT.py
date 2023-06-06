@@ -501,7 +501,7 @@ if __name__ == '__main__':
     """
     usage = 'PMAT <command> <arguments>'
 
-    description = f"PMAT            an efficient assembly tool for plant mitochondrial genome"
+    description = f"PMAT            an efficient assembly toolkit for plant mitochondrial genome"
     Version =     f"Version         {__version__}"
     Contributor = f"Contributors    Bi,C. and Han,F."
     Email =       f"Email           bichwei@njfu.edu.cn, hanfc@caf.ac.cn"
@@ -513,12 +513,12 @@ if __name__ == '__main__':
     parser.add_argument('-v', '--version', action='version', version='PMAT v' + __version__)
 
     sub_description ="""
-    all         an efficient assembly tool for plant mitochondrial genome\n
+    all         an efficient assembly toolkit for plant mitochondrial genome\n
     graphBuild  Structure assembly based on Newbler output"""
     subparsers = parser.add_subparsers(title='Commands', description=sub_description, metavar='')
 
     #--------------------------------------------------------------------
-    all_description = f"PMAT: an efficient assembly tool for plant mitochondrial genome\n\n{log.blue('For more information about PMAT, see https://github.com/bichangwei/PMAT')}\n\n"
+    all_description = f"PMAT: an efficient assembly toolkit for plant mitochondrial genome\n\n{log.blue('For more information about PMAT, see https://github.com/bichangwei/PMAT')}\n\n"
     
     all_example = """Example:
     # If canu or NextDenovo is not installed in the PATH you need to provide the parameter -cp or -np.

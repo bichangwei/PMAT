@@ -1,7 +1,7 @@
 # PMAT - an efficient assembly toolkit for plant mitochondrial genome
 <p align="center"><img src="misc/logo.png" alt="PMAT" width="600"></p>
 
-PMAT is an efficient tool for mitochondrial genome assembly. It can correct three-generation sequencing data using [canu](https://github.com/marbl/canu) or [NextDenovo](https://github.com/Nextomics/NextDenovo) and then use [Newbler](https://evomics.org/learning/assembly-and-alignment/newbler/) to assemble it. Finally, PMAT can identify mitochondrial genome sequences and generate mitochondrial genome structures.
+PMAT is an efficient toolkit for mitochondrial genome assembly. It can correct three-generation sequencing data using [canu](https://github.com/marbl/canu) or [NextDenovo](https://github.com/Nextomics/NextDenovo) and then use [Newbler](https://evomics.org/learning/assembly-and-alignment/newbler/) to assemble it. Finally, PMAT can identify mitochondrial genome sequences and generate mitochondrial genome structures.
 
 ## Installation
 
@@ -35,7 +35,7 @@ PMAT is an efficient tool for mitochondrial genome assembly. It can correct thre
 
 ## options and usage
 
-```shell
+```
 Run `PMAT --help` to view the program's usage guide.
 
     usage: PMAT <command> <arguments>
@@ -49,7 +49,7 @@ Run `PMAT --help` to view the program's usage guide.
     |__|       |_|    \__/    |_| /_/          \_\      |_|
 
 
-    PMAT            an efficient assembly tool for plant mitochondrial genome
+    PMAT            an efficient assembly toolkit for plant mitochondrial genome
     Version         1.1.0
     Contributors    Bi,C. and Han,F.
     Email           bichwei@njfu.edu.cn, hanfc@caf.ac.cn
@@ -62,7 +62,7 @@ Run `PMAT --help` to view the program's usage guide.
 
     Commands:
 
-        all         an efficient assembly tool for plant mitochondrial genome
+        all         an efficient assembly toolkit for plant mitochondrial genome
     
         graphBuild  Structure assembly based on Newbler output
 ```
