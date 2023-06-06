@@ -1,4 +1,4 @@
-# PMAT - an efficient assembly tool for plant mitochondrial genome
+# PMAT - an efficient assembly toolkit for plant mitochondrial genome
 <p align="center"><img src="misc/logo.png" alt="PMAT" width="600"></p>
 
 PMAT is an efficient tool for mitochondrial genome assembly. It can correct three-generation sequencing data using [canu](https://github.com/marbl/canu) or [NextDenovo](https://github.com/Nextomics/NextDenovo) and then use [Newbler](https://evomics.org/learning/assembly-and-alignment/newbler/) to assemble it, and it will find the mitochondrial genome sequence and generate the mitochondrial genome structure.
@@ -73,7 +73,7 @@ Run `PMAT --help` to view the program's help documentation.
 
     Example:
     ```
-        # If canu or NextDenovo is not installed in the PATH you need to provide the parameter -cp or -np.
+        # If canu or NextDenovo is not installed in the PATH, you need provide the parameter -cp or -np.
         For HiFi data    : PMAT all -i hifi.fastq.gz -o hifi_assembly -st hifi -g 500M
         For ONT raw data : PMAT all -i ont.fastq.gz -o ont_assembly -st ont -cfg ont_correct.cfg -tk all -g 500M
         For CLR raw data : PMAT all -i ont.fastq.gz -o clr_assembly -st clr -cfg clr_correct.cfg -tk all -g 500M
