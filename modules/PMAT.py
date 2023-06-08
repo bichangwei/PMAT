@@ -15,8 +15,6 @@ import shutil
 import argparse
 import time
 import gzip
-
-print(os.path.dirname(sys.argv[0]))
 if os.path.exists(os.path.abspath(os.path.dirname(sys.argv[0]) + '/../modules/PMAT.py')):
     sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../modules'))
 elif shutil.which('PMAT'):
