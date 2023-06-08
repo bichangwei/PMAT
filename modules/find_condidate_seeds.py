@@ -18,12 +18,14 @@ import argparse
 import time
 from log import Log
 
-if shutil.which("PMAT"):
-    db_path = os.path.join(os.path.abspath(os.path.dirname(shutil.which("PMAT")) + '/../Conserved_PCGs_db'), "Plant_conserved_mtgene_nt.fa")
-elif os.path.exists(os.path.abspath(os.path.dirname(__file__) + '/../Conserved_PCGs_db/Plant_conserved_mtgene_nt.fa')):
+log = Log()
+
+if os.path.exists(os.path.abspath(os.path.dirname(__file__) + '/../Conserved_PCGs_db/Plant_conserved_mtgene_nt.fa')):
     db_path = os.path.join(os.path.abspath(os.path.dirname(__file__) + '/../Conserved_PCGs_db'), "Plant_conserved_mtgene_nt.fa")
+elif shutil.which("PMAT"):
+    db_path = os.path.join(os.path.abspath(os.path.dirname(shutil.which("PMAT")) + '/../Conserved_PCGs_db'), "Plant_conserved_mtgene_nt.fa")
 else:
-    db_path = os.path.join(os.path.abspath(os.path.dirname(__file__) + '/Conserved_PCGs_db'), "Plant_conserved_mtgene_nt.fa")
+    log.Warning("Please check if the Conserved_PCGs_db file is installed correctly!")
 
 class SeedFinder:
     def __init__(self, Allcontigs, id_depth, output_path):

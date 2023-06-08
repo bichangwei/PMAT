@@ -14,16 +14,18 @@ import subprocess
 from check_file import remove_file, rename_file
 
 log = Log()
-
+print(os.path.dirname(__file__))
 def run_newbler(cpu, assembly_seq, output_path, mi=90, ml=40):
 
     # runAssembly_container = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../container/runAssembly.sif")
-    if shutil.which('PMAT'):
-        runAssembly_container = os.path.join(os.path.abspath(os.path.dirname(shutil.which('PMAT')) + "/../container"), "runAssembly.sif")
-    elif os.path.exists(os.path.abspath(os.path.dirname(__file__) + "/../container/runAssembly.sif")):
+
+    if os.path.exists(os.path.abspath(os.path.dirname(__file__) + "/../container/runAssembly.sif")):
         runAssembly_container = os.path.join(os.path.abspath(os.path.dirname(__file__) + "/../container"), "runAssembly.sif")
+    elif shutil.which('PMAT'):
+        runAssembly_container = os.path.join(os.path.abspath(os.path.dirname(shutil.which('PMAT')) + "/../container"), "runAssembly.sif")
     else:
-        runAssembly_container = os.path.join(os.path.abspath(os.path.dirname(__file__) + "/container"), "runAssembly.sif")
+        log.Warning("runAssembly.sif installation error!")
+
     log.get_path(f'The path of Newbler : {runAssembly_container}')
     
     log.section_header("Reads assembly start...")
@@ -59,6 +61,3 @@ def run_newbler(cpu, assembly_seq, output_path, mi=90, ml=40):
 
 if __name__ == '__main__':
       run_newbler()
-
-import os
-os.path.exists(os.path.abspath(os.path.join(os.path.dirname('/home/hanfc/pub/Linux_001/workspace/mitogenome/Litsea_cubeba/Canu_newbler/script/PMAT/script/ste.txt')) + "/../container/runAssembly.sif"))
