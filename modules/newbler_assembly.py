@@ -14,7 +14,7 @@ import subprocess
 from check_file import remove_file, rename_file
 
 log = Log()
-print(os.path.dirname(__file__))
+
 def run_newbler(cpu, assembly_seq, output_path, mi=90, ml=40):
 
     # runAssembly_container = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../container/runAssembly.sif")
