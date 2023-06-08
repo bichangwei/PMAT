@@ -5,17 +5,10 @@ PMAT is an efficient toolkit for mitochondrial genome assembly. It can correct t
 
 ## Installation
 
-#### install by using git
+#### recommended installation method
 ```shell
-    git clone https://github.com/bichangwei/PMAT.git
-    cd PMAT/bin
-    chmod a+x PMAT
-    PMAT --help
-```
-
-#### install from source
-```shell
-    unzip PMAT-main.zip
+    wget https://github.com/bichangwei/PMAT/releases/download/v1.1.0/PMAT-1.1.0.tar.gz
+    tar -zxvf PMAT-1.1.0.tar.gz
     cd PMAT/bin
     chmod a+x PMAT
     PMAT --help
@@ -102,7 +95,7 @@ Run `PMAT --help` to view the program's usage guide.
         When using the graphBuild command, the blastn is required and needs to be installed in the PATH.
     
 ## Version
-PMAT version 1.10 (2023.05.05)
+PMAT version 1.1.0 (2023.05.05)
 
 ## Author
 Changwei Bi bichwei@njfu.edu.cn  
