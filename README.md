@@ -28,9 +28,9 @@ PMAT is an efficient toolkit for mitochondrial genome assembly. It can correct t
 
 ## options and usage
 
-```
 Run `PMAT --help` to view the program's usage guide.
 
+```shell
     usage: PMAT <command> <arguments>
     
      ______     ___           __        ____       _____________ 
