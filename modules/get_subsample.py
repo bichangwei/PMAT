@@ -45,25 +45,31 @@ def subsample(output, corrected_seq, factor, seed=6):
         if is_gzipped_file(corrected_seq):
             with gzip.open(corrected_seq,'rt') as unzip_fa:
                     start_time = time.time()
+                    count_seq = ""
                     # for line in tqdm(unzip_fa, desc="Random selected subsets ", ascii=True):
                     for line in unzip_fa:
                         if line.startswith('>'):
+                            count_seq = ""
                             count += 1
                             dict_contig[count]=line.strip()
                         else:
-                            dict_seq[count] = line.strip()
+                            count_seq = count_seq + line.strip()
+                            dict_seq[count] = count_seq
                         elapsed_time = time.time() - start_time
                         print(f">>>>>> Random selected subsets {elapsed_time:.2f}s <<<<<<", end="\r")
         else:
             with open(corrected_seq, 'r') as fp_read:
                 start_time = time.time()
+                count_seq = ""
                 # for line in tqdm(fp_read, desc="Random selected subsets ", ascii=True):
                 for line in fp_read:
                     if line.startswith('>'):
+                        count_seq = ""
                         count += 1
                         dict_contig[count]=line.strip()
                     else:
-                        dict_seq[count] = line.strip()
+                        count_seq = count_seq + line.strip()
+                        dict_seq[count] = count_seq
                     elapsed_time = time.time() - start_time
                     print(f">>>>>> Random selected subsets {elapsed_time:.2f}s <<<<<<", end="\r")
 
