@@ -68,12 +68,12 @@ Run `PMAT --help` to view the program's usage guide.
 
     Example:
     ```
-        # If canu or NextDenovo is not installed in the PATH when using clr or ont data, you need to provide the parameter -cp or -np.
-        For HiFi data    : PMAT all -i hifi.fastq.gz -o hifi_assembly -st hifi -g 500M
-        For ONT raw data : PMAT all -i ont.fastq.gz -o ont_assembly -st ont -cfg ont_correct.cfg -tk all -g 500M
-        For CLR raw data : PMAT all -i ont.fastq.gz -o clr_assembly -st clr -cfg clr_correct.cfg -tk all -g 500M
-        For ONT corrected data : PMAT all -i corrected.fa -o ont_assembly -st ont -tk p1 -g 500M
-        For CLR corrected data : PMAT all -i corrected.fa -o clr_assembly -st clr -tk p1 -g 500M
+    # If canu or NextDenovo is not installed in the PATH when using clr or ont data, you need to provide the parameter -cp or -np.
+    For HiFi data    : PMAT all -i hifi.fastq.gz -o hifi_assembly -st hifi -g 500M
+    For ONT raw data : PMAT all -i ont.fastq.gz -o ont_assembly -st ont -cfg ont_correct.cfg -tk all -g 500M
+    For CLR raw data : PMAT all -i ont.fastq.gz -o clr_assembly -st clr -cfg clr_correct.cfg -tk all -g 500M
+    For ONT corrected data : PMAT all -i corrected.fa -o ont_assembly -st ont -tk p1 -g 500M
+    For CLR corrected data : PMAT all -i corrected.fa -o clr_assembly -st clr -tk p1 -g 500M
     ```
 
     notes:
@@ -87,8 +87,8 @@ Run `PMAT --help` to view the program's usage guide.
 
     Example:
     ```shell
-        PMAT graphBuild -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs 4G -o output
-        PMAT graphBuild -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs hifi.cut20k.fa -s 1 6 8 -o output
+    PMAT graphBuild -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs 4G -o output
+    PMAT graphBuild -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs hifi.cut20k.fa -s 1 6 8 -o output
     ```
     notes:
     
