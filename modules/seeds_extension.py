@@ -16,7 +16,7 @@ from progressbar import ProgressBar, ProgressBar, Percentage, Bar
 
 class Extend_seeds:
 
-    def __init__(self, all_connections, id_depth, id_length, link_depth, dynamic_sampleIDs, simple_pairs, proleptic_connections, minPath, genomesize, assemblysize):
+    def __init__(self, all_connections, id_depth, id_length, link_depth, dynamic_sampleIDs, simple_pairs, proleptic_connections, minPath, nucl_contig_depth):
         self.all_connections = all_connections
         self.id_depth = id_depth
         self.id_length = id_length
@@ -27,7 +27,7 @@ class Extend_seeds:
         self.minPath = minPath
         # self.minDep = minDep
         # self.minLen = minLen
-        self.nucl_contig_depth = assemblysize / genomesize
+        self.nucl_contig_depth = nucl_contig_depth
 
     def _seed_extend(self, cycl):
         '''
