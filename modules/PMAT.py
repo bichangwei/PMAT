@@ -166,21 +166,28 @@ def all(args):
     log.section_header("Seeds extension start...")
     # Result of update_seed_extend
     # assemblysize = os.path.getsize(assembly_seq_cut_path)
+    nucl_contig_depth = assemblysize / genomesize
     initial_connections = seeds_extension.Extend_seeds(all_connections, id_depth, id_length, link_depth, 
                                                        dynamic_sampleIDs, simple_pairs, proleptic_connections, 
-                                                       minLink, genomesize, assemblysize).update_seed_extend()  # The list stores contig connections
+                                                       minLink, nucl_contig_depth).update_seed_extend()  # The list stores contig connections
     log.section_tail("Seeds extension end.")
     log.Info(log.dim('-'*80))
     # 
     initial_seeds = assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                                  id_length, id_depth, simple_pairs).Target_seeds('init')
+    raw_add = []
+    for condidate_seed in condidate_seeds:
+        if str(condidate_seed) not in initial_seeds and float(id_depth[str(condidate_seed)]) > nucl_contig_depth*2:
+            raw_add.append(condidate_seed)
     # 
     main_seeds = assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                               id_length, id_depth, simple_pairs).Target_seeds('main')
-    
+
     log.Info('Start generating the gfa file.')
     # Supplement the missing contig in PMATAllcontigs.txt
-    add_seq(initial_seeds, file_data_fna_name, simple_pairs, id_seq, id_length)
+    raw_seeds = initial_seeds
+    raw_seeds.extend(raw_add)
+    add_seq(raw_seeds, file_data_fna_name, simple_pairs, id_seq, id_length)
 
     # with open(self.file_data_fna_name, 'r') as fna:
     #     contig_dict = {}
@@ -211,12 +218,12 @@ def all(args):
     mkdir_file_path(f'{Output}/gfa_result')
     init_output = os.path.join(Output, 'gfa_result/PMAT_raw.gfa')
 
-    if len(initial_seeds) != 0:
+    if len(raw_seeds) != 0:
         init_gfa = open(init_output, 'w')
         assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
-                                    id_length, id_depth, simple_pairs, contig_dict).save_gfa(init_gfa, initial_seeds, 'init')
+                                    id_length, id_depth, simple_pairs, contig_dict).save_gfa(init_gfa, raw_seeds, 'init')
         init_gfa.close()
-        log.Info(log.dim(' >>> ') + f'{log.bold_green(str(len(initial_seeds)))}' + log.bold_green(' contigs are added to a raw graph'))
+        log.Info(log.dim(' >>> ') + f'{log.bold_green(str(len(raw_seeds)))}' + log.bold_green(' contigs are added to a raw graph'))
     else:
         log.Error('There is no raw structure for this seeds extension result.')
 
@@ -340,21 +347,31 @@ def graphBuild(args):
 
     log.section_header("Seeds extension start...")
     # Result of update_seed_extend
+    nucl_contig_depth = readsize / genomesize
     initial_connections = seeds_extension.Extend_seeds(all_connections, id_depth, id_length, link_depth, 
                                                        dynamic_sampleIDs, simple_pairs, proleptic_connections, 
-                                                       minLink, genomesize, readsize).update_seed_extend()  # The list stores contig connections
+                                                       minLink, nucl_contig_depth).update_seed_extend()  # The list stores contig connections
     log.section_tail("Seeds extension end.")
     print(log.dim('-'*80))
     # 
     initial_seeds = assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                                  id_length, id_depth, simple_pairs).Target_seeds('init')
+    raw_add = []
+    for condidate_seed in condidate_seeds:
+        if str(condidate_seed) not in initial_seeds: 
+            if float(id_depth[str(condidate_seed)]) > nucl_contig_depth*2:
+                raw_add.append(condidate_seed)
     # 
     main_seeds = assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                               id_length, id_depth, simple_pairs).Target_seeds('main')
-    
+
     log.Info('Start generating the gfa file.')
     # Supplement the missing contig in PMATAllcontigs.txt
-    add_seq(initial_seeds, file_data_fna_name, simple_pairs, id_seq, id_length)
+
+    raw_seeds = initial_seeds
+    raw_seeds.extend(raw_add)
+
+    add_seq(raw_seeds, file_data_fna_name, simple_pairs, id_seq, id_length)
 
     # with open(self.file_data_fna_name, 'r') as fna:
     #     contig_dict = {}
@@ -384,12 +401,12 @@ def graphBuild(args):
     # Output the initial gfa
     init_output = os.path.join(Output, 'PMAT_raw.gfa')
 
-    if len(initial_seeds) != 0:
+    if len(raw_seeds) != 0:
         init_gfa = open(init_output, 'w')
         assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
-                                    id_length, id_depth, simple_pairs, contig_dict).save_gfa(init_gfa, initial_seeds, 'init')
+                                    id_length, id_depth, simple_pairs, contig_dict).save_gfa(init_gfa, raw_seeds, 'init')
         init_gfa.close()
-        log.Info(log.dim(' >>> ') + f'{log.bold_green(str(len(initial_seeds)))}' + log.bold_green(' contigs are added to a raw graph'))
+        log.Info(log.dim(' >>> ') + f'{log.bold_green(str(len(raw_seeds)))}' + log.bold_green(' contigs are added to a raw graph'))
     else:
         log.Error('There is no raw structure for this seeds extension result.')
 
