@@ -1,1 +1,2 @@
 *.sif filter=lfs diff=lfs merge=lfs -text
+container/runAssembly.sif filter=lfs diff=lfs merge=lfs -text
