@@ -30,9 +30,10 @@ def run_newbler(cpu, assembly_seq, output_path, mi=90, ml=40):
     
     log.section_header("Reads assembly start...")
 
-    newbler_output = f'{output_path}/assembly_result'
+   # newbler_output = f'{output_path}/assembly_result'
 
-    command = f'singularity exec {runAssembly_container} runAssembly -cpu {cpu} -het -sio -m -urt -large -s 100 -nobig -mi {mi} -ml {ml} -o {newbler_output} {assembly_seq}'.split(' ')
+    mount_output = os.path.join("/data", output_path.lstrip('/'))
+    command = f'singularity exec -B {output_path}:{mount_output} -B {assembly_seq} {runAssembly_container} runAssembly -cpu {cpu} -het -sio -m -urt -large -s 100 -nobig -mi {mi} -ml {ml} -o {mount_output}/assembly_result {assembly_seq}'.split(' ')
     newbler_process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # Loop over stdout and stderr in real-time and print the output    
@@ -61,3 +62,4 @@ def run_newbler(cpu, assembly_seq, output_path, mi=90, ml=40):
 
 if __name__ == '__main__':
       run_newbler()
+
