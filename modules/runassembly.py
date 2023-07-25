@@ -4,7 +4,7 @@
 """
 https://github.com/bichangwei/PMAT
 
-This is part of the PMAT. Assembly of the error corrected data using Newbler.
+This is part of the PMAT. Assembly of the error corrected data using runAssembly.
 """
 
 from log import Log
@@ -15,7 +15,7 @@ from check_file import remove_file, rename_file
 
 log = Log()
 
-def run_newbler(cpu, assembly_seq, output_path, mi=90, ml=40):
+def run_Assembly(cpu, assembly_seq, output_path, mi=90, ml=40):
 
     # runAssembly_container = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../container/runAssembly.sif")
 
@@ -26,40 +26,38 @@ def run_newbler(cpu, assembly_seq, output_path, mi=90, ml=40):
     else:
         log.Warning("runAssembly.sif installation error!")
 
-    log.get_path(f'The path of Newbler : {runAssembly_container}')
+    log.get_path(f'The path of runAssembly : {runAssembly_container}')
     
     log.section_header("Reads assembly start...")
 
-   # newbler_output = f'{output_path}/assembly_result'
 
     mount_output = os.path.join("/data", output_path.lstrip('/'))
+    runAssembly_output = f'{output_path}/assembly_result'
     command = f'singularity exec -B {output_path}:{mount_output} -B {assembly_seq} {runAssembly_container} runAssembly -cpu {cpu} -het -sio -m -urt -large -s 100 -nobig -mi {mi} -ml {ml} -o {mount_output}/assembly_result {assembly_seq}'.split(' ')
-    newbler_process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    runAssembly_process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # Loop over stdout and stderr in real-time and print the output    
-    # with open(f'{logfile}/newbler.log', 'w') as newblerlog:
-    for line in iter(newbler_process.stdout.readline, b''):
+    # with open(f'{logfile}/runAssembly.log', 'w') as runAssemblylog:
+    for line in iter(runAssembly_process.stdout.readline, b''):
         log.log(line.decode().strip().replace('\r', ''))
-        # newblerlog.write(line.decode().strip().replace('\r', '')+'\n')
+        # runAssemblylog.write(line.decode().strip().replace('\r', '')+'\n')
 
-    for line in iter(newbler_process.stderr.readline, b''):
+    for line in iter(runAssembly_process.stderr.readline, b''):
         log.log(line.decode().strip().replace('\r', ''))
-        # newblerlog.write(line.decode().strip().replace('\r', '')+'\n')
-    newbler_process.communicate()
+        # runAssemblylog.write(line.decode().strip().replace('\r', '')+'\n')
+    runAssembly_process.communicate()
 
     log.section_tail("Reads assembly end.")
-    log.get_path(f'Assembly results path : {newbler_output}')
+    log.get_path(f'Assembly results path : {runAssembly_output}')
 
-    rename_file(f'{newbler_output}/454AllContigs.fna', f'{newbler_output}/PMATAllContigs.fna')
-    rename_file(f'{newbler_output}/454ContigGraph.txt', f'{newbler_output}/PMATContigGraph.txt')
+    rename_file(f'{runAssembly_output}/454AllContigs.fna', f'{runAssembly_output}/PMATAllContigs.fna')
+    rename_file(f'{runAssembly_output}/454ContigGraph.txt', f'{runAssembly_output}/PMATContigGraph.txt')
 
-    for rmopt in [os.path.join(newbler_output, opt) for opt in os.listdir(newbler_output) if opt.startswith('454')]:
+    for rmopt in [os.path.join(runAssembly_output, opt) for opt in os.listdir(runAssembly_output) if opt.startswith('454')]:
         remove_file(rmopt)
 
-    assembly_output = newbler_output
+    assembly_output = runAssembly_output
 
     return assembly_output
 
-if __name__ == '__main__':
-      run_newbler()
 
