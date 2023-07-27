@@ -50,11 +50,16 @@ def run_Assembly(cpu, assembly_seq, output_path, mi=90, ml=40):
     log.section_tail("Reads assembly end.")
     log.get_path(f'Assembly results path : {runAssembly_output}')
 
-    rename_file(f'{runAssembly_output}/454AllContigs.fna', f'{runAssembly_output}/PMATAllContigs.fna')
-    rename_file(f'{runAssembly_output}/454ContigGraph.txt', f'{runAssembly_output}/PMATContigGraph.txt')
+    if os.path.exists(f'{runAssembly_output}/454AllContigs.fna') and os.path.exists(f'{runAssembly_output}/454ContigGraph.txt'):
+        rename_file(f'{runAssembly_output}/454AllContigs.fna', f'{runAssembly_output}/PMATAllContigs.fna')
+        rename_file(f'{runAssembly_output}/454ContigGraph.txt', f'{runAssembly_output}/PMATContigGraph.txt')
 
-    for rmopt in [os.path.join(runAssembly_output, opt) for opt in os.listdir(runAssembly_output) if opt.startswith('454')]:
-        remove_file(rmopt)
+        for rmopt in [os.path.join(runAssembly_output, opt) for opt in os.listdir(runAssembly_output) if opt.startswith('454')]:
+            remove_file(rmopt)
+    else:
+        for rmopt in [os.path.join(runAssembly_output, opt) for opt in os.listdir(runAssembly_output)]:
+            remove_file(rmopt)
+        log.Warning("Data assembly error: Please change the -fc or -sd option.")
 
     assembly_output = runAssembly_output
 

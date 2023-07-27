@@ -116,9 +116,10 @@ class AssemblyGraph:
         '''
 
         start_time = time.time()
+
         for i, ctg in enumerate(seeds):
             ctg_RC = int(self.id_length[str(ctg)])*float(self.id_depth[str(ctg)])
-            gfa.write("S\t{}\t{}\tLN:i:{}\tRC:i:{}\n".format(ctg, self.contig_dict[self.simple_pairs[str(ctg)]], self.id_length[str(ctg)], ctg_RC))
+            gfa.write("S\t{}\t{}\tLN:i:{}\tRC:i:{}\n".format(ctg, self.contig_dict[str(ctg)], self.id_length[str(ctg)], ctg_RC))
 
         if init_main_connections == 'init':
             init_main_connections = self.initial_connections

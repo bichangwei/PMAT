@@ -21,7 +21,7 @@ def BreakLongReads(corrected_seq, break_length=20000):
     break_length -> default:20000bp
     '''
     
-    log.section_header("Reads break start...")
+    log.section_header("\nReads break start...")
 
     seq_count = 0
     name = 1

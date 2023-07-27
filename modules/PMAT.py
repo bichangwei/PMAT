@@ -49,6 +49,9 @@ from progressbar import ProgressBar, ProgressBar, Percentage, Bar
 def autoMito(args):
     start_time = time.time()
 
+    if os.path.exists(f'{args.output}/assembly_result'):
+        log.Warning(f'Error: Destination {args.output}/assembly_result already exists.')
+
     if args.seqtype.lower() == 'hifi':
         pass
     else:
@@ -214,15 +217,20 @@ def autoMito(args):
     contig_dict = {}
     start_time = time.time()
     index = 0
+    head_seq = None
     while index < len(fna_seq):
         elapsed_time = time.time() - start_time
         if fna_seq[index].startswith('>'):
-            head_seq = fna_seq[index].split()[0].strip().replace('>', '')
-            contig_dict[head_seq] = ''
-        else:
+            head_seq = re.sub('>contig0*', '', fna_seq[index].split()[0].strip())
+
+            if head_seq in initial_seeds:
+                contig_dict[head_seq] = ''
+        elif head_seq in initial_seeds:
             contig_dict[head_seq] = contig_dict[head_seq] + str(fna_seq[index].strip())
         index = index+1
         print(f">>>>>> save gfa for {elapsed_time:.2f}s <<<<<<", end="\r")
+    end_time = time.time() - start_time
+    print(f">>>>>> save gfa for {end_time}s <<<<<<")
 
     # Output the initial gfa
     mkdir_file_path(f'{Output}/gfa_result')
@@ -398,15 +406,21 @@ def graphBuild(args):
     contig_dict = {}
     start_time = time.time()
     index = 0
+    head_seq = None
     while index < len(fna_seq):
         elapsed_time = time.time() - start_time
         if fna_seq[index].startswith('>'):
-            head_seq = fna_seq[index].split()[0].strip().replace('>', '')
-            contig_dict[head_seq] = ''
-        else:
+            head_seq = re.sub('>contig0*', '', fna_seq[index].split()[0].strip())
+
+            if head_seq in initial_seeds:
+                contig_dict[head_seq] = ''
+        elif head_seq in initial_seeds:
             contig_dict[head_seq] = contig_dict[head_seq] + str(fna_seq[index].strip())
         index = index+1
         print(f">>>>>> save gfa for {elapsed_time:.2f}s <<<<<<", end="\r")
+    end_time = time.time() - start_time
+    print(f">>>>>> save gfa for {end_time}s <<<<<<")
+    ###
 
     # Output the initial gfa
     init_output = os.path.join(Output, 'PMAT_raw.gfa')
