@@ -55,25 +55,25 @@ Run `PMAT --help` to view the program's usage guide.
 
     Commands:
 
-        all         an efficient assembly toolkit for plant mitochondrial genome
+        autoMito         an efficient assembly toolkit for plant mitochondrial genome
     
         graphBuild  Structure assembly based on Newbler output
 ```
 
 ## Tips
 
-- **all** -- De novo analysis of sequencing data (hifi, clr and ont).
+- **autoMito** -- De novo analysis of sequencing data (hifi, clr and ont).
     
-    run `PMAT all --help` view the usage guide for the all command.
+    run `PMAT autoMito --help` view the usage guide for the autoMito command.
 
     Example:
     ```
     # If canu or NextDenovo is not installed in the PATH when using clr or ont data, you need to provide the parameter -cp or -np.
-    For HiFi data    : PMAT all -i hifi.fastq.gz -o hifi_assembly -st hifi -g 500M
-    For ONT raw data : PMAT all -i ont.fastq.gz -o ont_assembly -st ont -cfg ont_correct.cfg -tk all -g 500M
-    For CLR raw data : PMAT all -i ont.fastq.gz -o clr_assembly -st clr -cfg clr_correct.cfg -tk all -g 500M
-    For ONT corrected data : PMAT all -i corrected.fa -o ont_assembly -st ont -tk p1 -g 500M
-    For CLR corrected data : PMAT all -i corrected.fa -o clr_assembly -st clr -tk p1 -g 500M
+    For HiFi data    : PMAT autoMito -i hifi.fastq.gz -o hifi_assembly -st hifi -g 500M
+    For ONT raw data : PMAT autoMito -i ont.fastq.gz -o ont_assembly -st ont -cfg ont_correct.cfg -tk autoMito -g 500M
+    For CLR raw data : PMAT autoMito -i ont.fastq.gz -o clr_assembly -st clr -cfg clr_correct.cfg -tk all -g 500M
+    For ONT corrected data : PMAT autoMito -i corrected.fa -o ont_assembly -st ont -tk p1 -g 500M
+    For CLR corrected data : PMAT autoMito -i corrected.fa -o clr_assembly -st clr -tk p1 -g 500M
     ```
 
     notes:
