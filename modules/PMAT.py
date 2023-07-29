@@ -589,7 +589,7 @@ if __name__ == '__main__':
                                 help='Please enter the genome size of the species, such as 1G, 1000M.')
 
     optional_group.add_argument('-tk', '--task', required=False, default='all',
-                                help='all/p1/ Default: all\nall : De novo assembly including error correction for ONT/CLR data and no error correction for HiFi data\np1  : Import error-corrected ONT/CLR or HiFi data for direct assembly')
+                                help='all/p1/ Default: all\nall : De novo assembly including error correction for ONT/CLR data and no error correction for HiFi data\np1  : Import error-corrected ONT/CLR data for direct assembly')
     optional_group.add_argument('-cs', '--correctsoft', required=False, default='nextDenovo',
                                 help='Correcting software using nextDenovo or Canu. Default: nextDenovo')
     optional_group.add_argument('-cp', '--canu', required=False,
@@ -630,7 +630,7 @@ if __name__ == '__main__':
     graphBuild_description = f"Structure assembly based on runAssembly output\n\n{log.blue('For more information about PMAT, see https://github.com/bichangwei/PMAT')}\n\n"
     graphBuild_example = """Example:
     PMAT graphBuild -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs 4G -o output
-    PMAT graphBuild -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs hifi.cut20k.fa -s 1 6 8 -o output"""
+    PMAT graphBuild -c PMATContigGraph.txt -a PMATAllContigs.fna -gs 500M -rs assembly_seq.cut20K.fasta -s 1 6 8 -o output"""
     
     graphBuild_sub = subparsers.add_parser('graphBuild', description=graphBuild_description + graphBuild_example, formatter_class=argparse.RawTextHelpFormatter)
     
@@ -646,7 +646,7 @@ if __name__ == '__main__':
     required_group.add_argument("-gs","--genomesize", type=str, required=True, 
                                 help='Please enter the genome size of the species, such as 1G, 1000M.')
     required_group.add_argument("-rs", "--readsize",type=str, required=True,
-                                help='The read size or file for assembly, such as 5G or hifi.cut20K.fa.')
+                                help='The read size or file for assembly, such as 5G or assembly_seq.cut20K.fasta.')
 
     optional_group.add_argument('-cpu',type=int, required=False, default=8,
                                 help='cpus to use. Default: 8')

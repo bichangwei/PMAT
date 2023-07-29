@@ -11,7 +11,7 @@ from log import Log
 import shutil
 import os
 import subprocess
-from check_file import remove_file, rename_file
+from check_file import remove_file, rename_file, remove_dir
 
 log = Log()
 
@@ -56,9 +56,13 @@ def run_Assembly(cpu, assembly_seq, output_path, mi=90, ml=40):
 
         for rmopt in [os.path.join(runAssembly_output, opt) for opt in os.listdir(runAssembly_output) if opt.startswith('454')]:
             remove_file(rmopt)
+        remove_dir(os.path.join(runAssembly_output, "sff"))
     else:
         for rmopt in [os.path.join(runAssembly_output, opt) for opt in os.listdir(runAssembly_output)]:
-            remove_file(rmopt)
+            if os.path.isfile(rmopt):
+                remove_file(rmopt)
+            elif os.path.isdir(rmopt):
+                remove_dir(rmopt)
         log.Warning("Data assembly error: Please change the -fc or -sd option.")
 
     assembly_output = runAssembly_output

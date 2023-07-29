@@ -11,6 +11,7 @@ file paths and to create, delete and modify file names.
 import os
 from log import Log
 import gzip
+import shutil
 
 log = Log()
 
@@ -48,6 +49,10 @@ def mkdir_file_path(pathname):
 def remove_file(pathname):
     if os.path.exists(pathname):
         os.remove(pathname)
+
+def remove_dir(pathname):
+    if os.path.exists(pathname):
+        shutil.rmtree(pathname)
         
 def rename_file(old_pathnm, new_pathnm=False):
     if os.path.exists(old_pathnm):
