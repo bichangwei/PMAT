@@ -173,14 +173,6 @@ optional arguments:
 
 ## <a name="C6">Examples</a>
 
-PMAT runtime for different number of threads.
-
-|species|8 cpus|16 cpus|32 cpus|64 cpus|
-|-------|------|-------|-------|-------|
-|*Arabidopsis thaliana*|13m25.342s|9m29.853s|8m42.429s|9m57.279s|
-|*Juncus effusus*|9m37.173s|1m12.433s|4m49.595s|4m40.036s|
-|*Malus domestica*|21m12.306s|12m14.663s|7m58.749s|6m48.915s|
-
 **<a name="C6.1">Demo1</a>**
 
 1. Download Arabidopsis thaliana HiFi data
