@@ -175,15 +175,15 @@ optional arguments:
 
 **<a name="C6.1">Demo1</a>**
 
-1. Download Arabidopsis thaliana HiFi data
+1. Download a simulated Arabidopsis thaliana HiFi dataset:
 ```sh
 wget https://github.com/bichangwei/PMAT/releases/download/v1.1.0/Arabidopsis_thaliana_550Mb.fa.gz
 ```
-2. Run autoMito command
+2. then run the autoMito command for one-click assembly:
 ```sh
 PMAT autoMito -i Arabidopsis_thaliana_550Mb.fa.gz -o ./test1 -st hifi -g 120m
 ```
-3. Run graphBuild (Used when the autoMito command fails to get gfa automatically)
+3. then use the graphBuild command to manually select seeds for assembly (used when the autoMito command fails to get gfa automatically):
 ```sh
 # Based on the PMATContigGraph.txt file, manually select 3 or more contigs that match the depth of mitochondrial genome sequencing
 PMAT graphBuild -c ./test1/assembly_result/PMATContigGraph.txt -a ./test1/assembly_result/PMATAllContigs.fna -gs 125m -rs ./test1/subsample/assembly_seq.cut20K.fasta -o ./test1_gfa -s 343 345 905 513 1344
@@ -191,20 +191,20 @@ PMAT graphBuild -c ./test1/assembly_result/PMATContigGraph.txt -a ./test1/assemb
 4. PMAT runtime for different number of threads
 
 ```
-8 CPUs: 13m25.342s; 16 CPUs: 9m29.853s; 32 CPUs: 8m42.429s; 64 CPUs: 9m57.279s
+8 CPUs: 13m25.342s; 16 CPUs: 9m29.853s; 32 CPUs: 8m42.429s; 64 CPUs: 7m57.279s
 ```
 
 **<a name="C6.2">Demo2</a>**
 
-1. Download Juncus effusus HiFi data
+1. Download a simulated Juncus effusus HiFi dataset:
 ```sh
 wget https://github.com/bichangwei/PMAT/releases/download/v1.1.0/Juncus_effusus_216Mb.fa.gz
 ```
-2. Run autoMito command
+2. then run the autoMito command for one-click assembly:
 ```sh
 PMAT autoMito -i Juncus_effusus_216Mb.fa.gz -o ./test2 -st hifi -g 225m
 ```
-3. Run graphBuild (Used when the autoMito command fails to get gfa automatically)
+3. then use the graphBuild command to manually select seeds for assembly (used when the autoMito command fails to get gfa automatically):
 ```sh
 # Based on the PMATContigGraph.txt file, manually select 3 or more contigs that match the depth of mitochondrial genome sequencing
 PMAT graphBuild -c ./test2/assembly_result/PMATContigGraph.txt -a ./test2/assembly_result/PMATAllContigs.fna -gs 225m -rs ./test2/subsample/assembly_seq.cut20K.fasta -o ./test2_gfa -s 1 2 457
@@ -212,20 +212,20 @@ PMAT graphBuild -c ./test2/assembly_result/PMATContigGraph.txt -a ./test2/assemb
 4. PMAT runtime for different number of threads
 
 ```
-8 CPUs: 9m37.173s; 16 CPUs: 1m12.433s; 32 CPUs: 4m49.595s; 64 CPUs: 4m40.036s
+8 CPUs: 9m37.173s; 16 CPUs: 6m12.433s; 32 CPUs: 4m49.595s; 64 CPUs: 4m40.036s
 ```
 
 **<a name="C6.3">Demo3</a>**
 
-1. Download Malus domestica HiFi data
+1. Download a simulated Malus domestica HiFi dataset:
 ```sh
 wget https://github.com/bichangwei/PMAT/releases/download/v1.1.0/Malus_domestica.540Mb.fasta.gz
 ```
-2. Run autoMito command
+2. then run the autoMito command for one-click assembly:
 ```sh
 PMAT autoMito -i Malus_domestica.540Mb.fasta.gz -o ./test3 -st hifi -g 703m
 ```
-3. Run graphBuild (Used when the autoMito command fails to get gfa automatically)
+3. then use the graphBuild command to manually select seeds for assembly (used when the autoMito command fails to get gfa automatically):
 ```sh
 # Based on the PMATContigGraph.txt file, manually select 3 or more contigs that match the depth of mitochondrial genome sequencing
 PMAT graphBuild -c ./test3/assembly_result/PMATContigGraph.txt -a ./test3/assembly_result/PMATAllContigs.fna -gs 225m -rs ./test3/subsample/assembly_seq.cut20K.fasta -o ./test3_gfa -s 1 2 15391
