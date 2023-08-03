@@ -30,7 +30,7 @@ PMAT --help
 Install by downloading the source codes
 ```sh
 wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.2.0.tar.gz
-tar -zxvf PMAT-1.2.0.tar.gz
+tar -zxvf v1.2.0.tar.gz
 cd PMAT-1.2.0/bin
 chmod a+x PMAT
 PMAT --help
