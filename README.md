@@ -251,7 +251,7 @@ Updates:
 - Improve the help documentation for user readability.
 - Optimized path handling logic to dynamically retrieve the current directory instead of using hard-coded home directory paths.
 - Users can now directly clone the software to their local servers using Git.
-- Added test data to the repository, allowing users to quickly obtain assembly results.
+- Added [test data](#C6) to the repository, allowing users to quickly obtain assembly results.
 
 ## <a name="C9">Citing PMAT</a>
 Bi C, Shen F, Han F, Qu Y, et al. PMAT: an efficient plant mitogenome assembly toolkit using ultra-low coverage HiFi sequencing data. Unpublished. </br>
