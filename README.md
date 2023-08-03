@@ -20,7 +20,7 @@ PMAT is an efficient assembly toolkit for assembling plant mitogenomes using thi
 
 ## <a name="C1">Installation </a>
 
-Install by using git
+Install using git
 ```sh
 git clone https://github.com/bichangwei/PMAT.git
 cd PMAT/bin
@@ -238,15 +238,20 @@ PMAT graphBuild -c ./test3/assembly_result/PMATContigGraph.txt -a ./test3/assemb
 
 ## <a name="C7">Resulting files</a>
 - The output files include:
-  - `*/subsample/assembly_seq_subset.1.0.fasta`, Data for assembly
-  - `*/subsample/assembly_seq.cut20K.fasta`, reads trimmed data
+  - `*/subsample/assembly_seq_subset.1.0.fasta`, The subsampled data for assembly
+  - `*/subsample/assembly_seq.cut20K.fasta`, The trimmed data for assembly
   - `*/assembly_result/PMATAllContigs.fna`, The assembly result contains contig sequences
   - `*/assembly_result/PMATContigGraph.txt`, The assembly result contains contig linking relationships
-  - `*/assembly_result/PMAT_raw.gfa`, Initial results of mitochondrial genome assembly for visualization
-  - `*/assembly_result/PMAT_master.gfa`, Mitochondrial genome assembly optimization results for visualization
+  - `*/assembly_result/PMAT_raw.gfa`, The initial assembly graph of mitogenome
+  - `*/assembly_result/PMAT_master.gfa`, The optimized assembly graph of mitogenome
 
 ## <a name="C8">Version</a>
-PMAT version 1.2.0
+PMAT version 1.2.0 (23/8/3)</br>
+Updates:
+- Improve the help documentation for user readability.
+- Optimized path handling logic to dynamically retrieve the current directory instead of using hard-coded home directory paths.
+- Users can now directly clone the software to their local servers using Git.
+- Added test data to the repository, allowing users to quickly obtain assembly results.
 
 ## <a name="C9">Citing PMAT</a>
 Bi C, Shen F, Han F, Qu Y, et al. PMAT: an efficient plant mitogenome assembly toolkit using ultra-low coverage HiFi sequencing data. Unpublished. </br>
