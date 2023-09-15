@@ -49,6 +49,11 @@ from progressbar import ProgressBar, ProgressBar, Percentage, Bar
 def autoMito(args):
     start_time = time.time()
 
+    if shutil.which('blastn'):
+        pass
+    else:
+        log.Warning('Please install Blastn and add it to the environment variables.')
+
     if os.path.exists(f'{args.output}/assembly_result'):
         log.Warning(f'Error: Destination {args.output}/assembly_result already exists.')
 
@@ -263,7 +268,11 @@ def autoMito(args):
     # print('Took %f second' % (end_time - start_time))
 def graphBuild(args):
     # start_time = time.time()
-    
+    if shutil.which('blastn'):
+        pass
+    else:
+        log.Warning('Please install Blastn and add it to the environment variables.')
+
     if str(args.genomesize).lower().endswith('g'):
         genomesize = float(str(args.genomesize).lower().replace('g', '')) * 1000000000
     elif str(args.genomesize).lower().endswith('m'):
@@ -602,7 +611,7 @@ if __name__ == '__main__':
                                 help='Subset extraction of error-corrected ONT, CLR or HiFi data. Sampling ratio factor in 0-1. Default=1')
     # optional_group.add_argument('-rn', '--random', type=int, required=False, default=6,
     #                             help='Random number seeding when extracting subsets. Default:6')
-    optional_group.add_argument('-sd', '--subseed', required=False, default=6,
+    optional_group.add_argument('-sd', '--subseed', required=False, default=6, type=int,
                                 help='Sampling set random number seeds, Default=6')
     # optional_group.add_argument('-tl', '--trimlen', type=int, required=False, default=500,
     #                             help='ignore reads with length < this. Default: 500')

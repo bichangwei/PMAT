@@ -91,7 +91,7 @@ def subsample(output, corrected_seq, factor, seed=6):
 
         assembly_seq_path = assembly_seq
 
-        log.section_tail("Random selection sequence end.")
+        log.section_tail("Random select sequence end.")
         log.get_path(f'The random sequences path : {assembly_seq_path}')
     
     else:
