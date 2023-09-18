@@ -14,6 +14,7 @@ PMAT is an efficient assembly toolkit for assembling plant mitogenomes using thi
   - [Demo1](#C6.1)
   - [Demo2](#C6.2)
   - [Demo3](#C6.3)
+  - [Demo4](#C6.4)
 - [Resulting files](#C7)
 - [Version](#C8)
 - [Citing PMAT](#C9)
@@ -181,7 +182,7 @@ wget https://github.com/bichangwei/PMAT/releases/download/v1.1.0/Arabidopsis_tha
 ```
 2. then run the autoMito command for one-click assembly:
 ```sh
-PMAT autoMito -i Arabidopsis_thaliana_550Mb.fa.gz -o ./test1 -st hifi -g 120m
+PMAT autoMito -i Arabidopsis_thaliana_550Mb.fa.gz -o ./test1 -st hifi -g 120m -m
 ```
 3. then use the graphBuild command to manually select seeds for assembly (used when the autoMito command fails to get gfa automatically):
 ```sh
@@ -202,7 +203,7 @@ wget https://github.com/bichangwei/PMAT/releases/download/v1.1.0/Juncus_effusus_
 ```
 2. then run the autoMito command for one-click assembly:
 ```sh
-PMAT autoMito -i Juncus_effusus_216Mb.fa.gz -o ./test2 -st hifi -g 225m
+PMAT autoMito -i Juncus_effusus_216Mb.fa.gz -o ./test2 -st hifi -g 225m -m
 ```
 3. then use the graphBuild command to manually select seeds for assembly (used when the autoMito command fails to get gfa automatically):
 ```sh
@@ -223,7 +224,7 @@ wget https://github.com/bichangwei/PMAT/releases/download/v1.1.0/Malus_domestica
 ```
 2. then run the autoMito command for one-click assembly:
 ```sh
-PMAT autoMito -i Malus_domestica.540Mb.fasta.gz -o ./test3 -st hifi -g 703m
+PMAT autoMito -i Malus_domestica.540Mb.fasta.gz -o ./test3 -st hifi -g 703m -m
 ```
 3. then use the graphBuild command to manually select seeds for assembly (used when the autoMito command fails to get gfa automatically):
 ```sh
@@ -235,6 +236,20 @@ PMAT graphBuild -c ./test3/assembly_result/PMATContigGraph.txt -a ./test3/assemb
 ```
 8 CPUs: 21m12.306s; 16 CPUs: 12m14.663s; 32 CPUs: 7m58.749s; 64 CPUs: 6m48.915s
 ```
+
+**<a name="C6.4">Demo4(CLR or ONT)</a>**
+
+```
+1. then run the autoMito command for one-click assembly (CLR):
+```sh
+PMAT autoMito -i CLR.fasta.gz -o ./test_clr -st clr -g 100m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
+```
+2. then run the autoMito command for one-click assembly (ONT):
+```sh
+PMAT autoMito -i ONT.fasta.gz -o ./test_ont -st ont -g 100m -cs canu -cp path/canu -m
+```
+
+
 
 ## <a name="C7">Resulting files</a>
 - The output files include:
