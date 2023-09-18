@@ -237,7 +237,7 @@ PMAT graphBuild -c ./test3/assembly_result/PMATContigGraph.txt -a ./test3/assemb
 8 CPUs: 21m12.306s; 16 CPUs: 12m14.663s; 32 CPUs: 7m58.749s; 64 CPUs: 6m48.915s
 ```
 
-**<a name="C6.4">Demo4(CLR or ONT)</a>**
+**<a name="C6.4">Demo4 (ONT or CLR)</a>**
 
 ```
 1. then run the autoMito command for one-click assembly (CLR):
