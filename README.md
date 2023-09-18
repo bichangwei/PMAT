@@ -239,7 +239,6 @@ PMAT graphBuild -c ./test3/assembly_result/PMATContigGraph.txt -a ./test3/assemb
 
 **<a name="C6.4">Demo4 (ONT or CLR)</a>**
 
-```
 1. then run the autoMito command for one-click assembly (CLR):
 ```sh
 PMAT autoMito -i CLR.fasta.gz -o ./test_clr -st clr -g 100m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
