@@ -130,7 +130,10 @@ def autoMito(args):
 
     assembly_seq_path = judge_subsample(high_quality_seq, Output)
     assembly_seq_cut_path = break_long_reads.BreakLongReads(assembly_seq_path, args.breaknum)
-    assembly_output = runassembly.run_Assembly(args.cpu, assembly_seq_cut_path, Output, args.minidentity, args.minoverlaplen)
+    if args.mem:
+        assembly_output = runassembly.run_Assembly(args.cpu, assembly_seq_cut_path, Output, args.minidentity, args.minoverlaplen, mem = args.mem)
+    else:
+        assembly_output = runassembly.run_Assembly(args.cpu, assembly_seq_cut_path, Output, args.minidentity, args.minoverlaplen)
     file_data_fna_name = f'{assembly_output}/PMATAllContigs.fna'
     file_data_name = f'{assembly_output}/PMATContigGraph.txt'
     assemblysize = os.path.getsize(assembly_seq_path)
@@ -631,6 +634,8 @@ if __name__ == '__main__':
     #                             help='Filter according to the minimum path depth provided by the user')
     optional_group.add_argument("-l","--minLink", type=int, required=False, 
                                 help='Filter according to the minimum link depth provided by the user')
+    optional_group.add_argument("-m", "--mem", action="store_true", required=False,
+                                help='Flag to keep sequence data in memory to seepd up cup time')
     optional_group.add_argument('-v', '--version', action='version', version='PMAT v' + __version__,)
     autoMito_sub._action_groups.append(optional_group)
     autoMito_sub.set_defaults(func=autoMito)
