@@ -15,7 +15,8 @@ from check_file import remove_file, rename_file, remove_dir
 
 log = Log()
 
-def run_Assembly(cpu, assembly_seq, output_path, mi=90, ml=40, mem=None):
+
+def run_Assembly(cpu, assembly_seq, output_path, mi=90, ml=40):
 
     # runAssembly_container = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../container/runAssembly.sif")
 
@@ -28,15 +29,15 @@ def run_Assembly(cpu, assembly_seq, output_path, mi=90, ml=40, mem=None):
 
     log.get_path(f'The path of runAssembly : {runAssembly_container}')
     
-    log.section_header("Reads assembly start...")
+    log.section_header("Reads assembly start ...")
 
 
     mount_output = os.path.join("/data", output_path.lstrip('/'))
     runAssembly_output = f'{output_path}/assembly_result'
-    if mem:
-        command = f'singularity exec -B {output_path}:{mount_output} -B {assembly_seq} {runAssembly_container} runAssembly -cpu {cpu} -het -sio -m -urt -large -s 100 -nobig -mi {mi} -ml {ml} -o {mount_output}/assembly_result {assembly_seq}'.split(' ')
-    else:
-        command = f'singularity exec -B {output_path}:{mount_output} -B {assembly_seq} {runAssembly_container} runAssembly -cpu {cpu} -het -sio -urt -large -s 100 -nobig -mi {mi} -ml {ml} -o {mount_output}/assembly_result {assembly_seq}'.split(' ')
+    # path_command = f'export APPTAINER_BINDPATH="{assembly_seq},{output_path}:{mount_output}"'.split(' ')
+    os.environ['APPTAINER_BINDPATH'] = f'{assembly_seq},{output_path}:{mount_output}'
+    # subprocess.run(path_command)
+    command = f'apptainer exec {runAssembly_container} runAssembly -cpu {cpu} -het -sio -m -urt -large -s 100 -nobig -mi {mi} -ml {ml} -o {mount_output}/assembly_result {assembly_seq}'.split(' ')
     runAssembly_process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     # Loop over stdout and stderr in real-time and print the output    
@@ -51,7 +52,7 @@ def run_Assembly(cpu, assembly_seq, output_path, mi=90, ml=40, mem=None):
     runAssembly_process.communicate()
 
     log.section_tail("Reads assembly end.")
-    log.get_path(f'Assembly results path : {runAssembly_output}')
+    log.get_path(f'Assembly results path: {runAssembly_output}')
 
     if os.path.exists(f'{runAssembly_output}/454AllContigs.fna') and os.path.exists(f'{runAssembly_output}/454ContigGraph.txt'):
         rename_file(f'{runAssembly_output}/454AllContigs.fna', f'{runAssembly_output}/PMATAllContigs.fna')

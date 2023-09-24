@@ -66,16 +66,16 @@ class SeedFinder:
 
     def _Run_blastn(self):
         # Run the blastn.
-        start_time = time.time()
+        # start_time = time.time()
 
         Blastn_command = ['blastn', '-db', db_path, '-query', self.Allcontigs, '-outfmt', '6', '-num_threads', '30', '-num_alignments', '1', '-max_hsps', '1']
         Blastn_process = subprocess.Popen(Blastn_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         
         # Check if child process has terminated. Set and return returncode attribute. Otherwise, returns None.
-        while Blastn_process.poll() is None:
-            elapsed_time = time.time() - start_time
-            print(f">>>>>> Find condidate seeds for {elapsed_time:.2f}s <<<<<<", end="\r")
-            time.sleep(0.1)
+        # while Blastn_process.poll() is None:
+        #     elapsed_time = time.time() - start_time
+        #     print(f">>>>>> Find condidate seeds for {elapsed_time:.2f}s <<<<<<", end="\r")
+        #     time.sleep(0.1)
         
         # end_time = time.time()
         # elapsed_time = end_time - start_time

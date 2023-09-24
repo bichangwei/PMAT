@@ -48,12 +48,7 @@ from progressbar import ProgressBar, ProgressBar, Percentage, Bar
 
 def autoMito(args):
     start_time = time.time()
-
-    if shutil.which('blastn'):
-        pass
-    else:
-        log.Warning('Please install Blastn and add it to the environment variables.')
-
+    log.Info(f'PMAT v{__version__}')
     if os.path.exists(f'{args.output}/assembly_result'):
         log.Warning(f'Error: Destination {args.output}/assembly_result already exists.')
 
@@ -100,8 +95,8 @@ def autoMito(args):
     if args.seqtype.lower() == 'hifi':
         high_quality_seq = fastq2fa.fq2fa(args.input)
     else:
-        if args.task == 'all':
-            log.Info('Run autoMito processes...')
+        if args.task == 'autoMito':
+            log.Info('Run autoMito processes ...')
             if args.correctsoft.lower() == 'nextdenovo':
 
                 if args.correctcfg:
@@ -130,10 +125,7 @@ def autoMito(args):
 
     assembly_seq_path = judge_subsample(high_quality_seq, Output)
     assembly_seq_cut_path = break_long_reads.BreakLongReads(assembly_seq_path, args.breaknum)
-    if args.mem:
-        assembly_output = runassembly.run_Assembly(args.cpu, assembly_seq_cut_path, Output, args.minidentity, args.minoverlaplen, mem = args.mem)
-    else:
-        assembly_output = runassembly.run_Assembly(args.cpu, assembly_seq_cut_path, Output, args.minidentity, args.minoverlaplen)
+    assembly_output = runassembly.run_Assembly(args.cpu, assembly_seq_cut_path, Output, args.minidentity, args.minoverlaplen)
     file_data_fna_name = f'{assembly_output}/PMATAllContigs.fna'
     file_data_name = f'{assembly_output}/PMATContigGraph.txt'
     assemblysize = os.path.getsize(assembly_seq_path)
@@ -141,7 +133,7 @@ def autoMito(args):
 
     with open(file_data_name, 'r') as fo:
         data_list = fo.readlines()
-    log.section_header("Reading files...")
+    log.section_header("Reading files ...")
     # Result of get_all_connection_from_datafile
     simple_pairs = get_all_connection_from_datafile(data_list)[0]#{'1': 'contig00001',....., '92825': 'contig92825'}
     all_connections = get_all_connection_from_datafile(data_list)[1]  #  [{"68206 3'": "50193 5'"}, .....,{"92534 5'": "92436 3'"}]
@@ -159,22 +151,22 @@ def autoMito(args):
     proleptic_connections = []
 
     # Get condidate seeds
-    log.section_header("Candidate seeds search start...")
+    log.section_header("Candidate seeds search start ...")
     condidate_seeds = find_condidate_seeds.SeedFinder(file_data_fna_name, id_depth, Output).condidate_seeds()  # seed_ID
     log.Info(f"{len(condidate_seeds)} contigs are used as candidate seeds")
     log.Info(log.dim('-'*60))
     for n, condidate_seed in enumerate(condidate_seeds):
         # simple_pairs[str(condidate_seed)] = 'contig' + condidate_seed
         if n == 0:
-            print(f'{log.bold_green(simple_pairs[str(condidate_seed)])} {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X >> ', end=" ")
+            print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="  ")
             time.sleep(0.1)
         elif n+1 < len(condidate_seeds):
-            print(f'{log.bold_green(simple_pairs[str(condidate_seed)])} {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X >> ', end=" ")
+            print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="  ")
             time.sleep(0.1)
         else:
-            print(f'{log.bold_green(simple_pairs[str(condidate_seed)])} {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', end="\n")
+            print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="\n")
             time.sleep(0.1)
-    log.Info(log.dim('-'*80))
+    log.Info(log.dim('-'*60))
             
     dynamic_sampleIDs = condidate_seeds
 
@@ -184,7 +176,7 @@ def autoMito(args):
     else:
         minLink = None
 
-    log.section_header("Seeds extension start...")
+    log.section_header("Seeds extension start ...")
     # Result of update_seed_extend
     # assemblysize = os.path.getsize(assembly_seq_cut_path)
     nucl_contig_depth = assemblysize / genomesize
@@ -192,7 +184,7 @@ def autoMito(args):
                                                        dynamic_sampleIDs, simple_pairs, proleptic_connections, 
                                                        minLink, nucl_contig_depth).update_seed_extend()  # The list stores contig connections
     log.section_tail("Seeds extension end.")
-    log.Info(log.dim('-'*80))
+    log.Info(log.dim('-'*60))
     # 
     initial_seeds = assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                                  id_length, id_depth, simple_pairs).Target_seeds('init')
@@ -204,7 +196,7 @@ def autoMito(args):
     main_seeds = assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                               id_length, id_depth, simple_pairs).Target_seeds('main')
 
-    log.Info('Start generating the gfa file.')
+    log.Info('Start generating the gfa file ...')
     # Supplement the missing contig in PMATAllcontigs.txt
     raw_seeds = initial_seeds
     raw_seeds.extend(raw_add)
@@ -236,9 +228,9 @@ def autoMito(args):
         elif head_seq in initial_seeds:
             contig_dict[head_seq] = contig_dict[head_seq] + str(fna_seq[index].strip())
         index = index+1
-        print(f">>>>>> save gfa for {elapsed_time:.2f}s <<<<<<", end="\r")
+        # print(f">>>>>> save gfa for {elapsed_time:.2f}s <<<<<<", end="\r")
     end_time = time.time() - start_time
-    print(f">>>>>> save gfa for {end_time}s <<<<<<")
+    log.Info(f"save gfa for {end_time:.2f}s ")
 
     # Output the initial gfa
     mkdir_file_path(f'{Output}/gfa_result')
@@ -249,7 +241,7 @@ def autoMito(args):
         assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                     id_length, id_depth, simple_pairs, contig_dict).save_gfa(init_gfa, raw_seeds, 'init')
         init_gfa.close()
-        log.Info(log.dim(' >>> ') + f'{log.bold_green(str(len(raw_seeds)))}' + log.bold_green(' contigs are added to a raw graph'))
+        log.Info(f'{str(len(raw_seeds))} contigs are added to a raw graph')
     else:
         log.Error('There is no raw structure for this seeds extension result.')
 
@@ -262,20 +254,18 @@ def autoMito(args):
         assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                     id_length, id_depth, simple_pairs, contig_dict).save_gfa(main_gfa, main_seeds, 'main')
         main_gfa.close()
-        log.Info(log.dim(' >>> ') + f'{log.bold_green(str(len(main_seeds)))}' + log.bold_green(' contigs are added to a master graph '))
+        log.Info(f'{str(len(main_seeds))} contigs are added to a master graph')
     else:
         log.Error('There is no master structure for this seeds extension result.')
 
     log.Info('Generate gfa task end.')
+    log.Info('Task over, bye!\n')
+
     # end_time = time.time()
     # print('Took %f second' % (end_time - start_time))
 def graphBuild(args):
     # start_time = time.time()
-    if shutil.which('blastn'):
-        pass
-    else:
-        log.Warning('Please install Blastn and add it to the environment variables.')
-
+    
     if str(args.genomesize).lower().endswith('g'):
         genomesize = float(str(args.genomesize).lower().replace('g', '')) * 1000000000
     elif str(args.genomesize).lower().endswith('m'):
@@ -305,7 +295,7 @@ def graphBuild(args):
 
     with open(file_data_name, 'r') as fo:
         data_list = fo.readlines()
-    log.section_header("Reading files......")
+    log.section_header("Reading files ...")
     # Result of get_all_connection_from_datafile
     simple_pairs = get_all_connection_from_datafile(data_list)[0]#{'1': 'contig00001',....., '92825': 'contig92825'}
     all_connections = get_all_connection_from_datafile(data_list)[1]  #  [{"68206 3'": "50193 5'"}, .....,{"92534 5'": "92436 3'"}]
@@ -318,7 +308,7 @@ def graphBuild(args):
     # longest_contig, longest_len = list(sorted(id_length.items(), key= lambda item: item[1], reverse=True))[0]
     log.Info(f'Contig number : {len(simple_pairs)}')
     log.Info(f'Longest Contig : contig{longest_contig} {id_length[str(longest_contig)]}bp')
-    print(log.dim('-'*80))
+    print(log.dim('-'*80), file=sys.stdout, flush=True)
 
     proleptic_connections = []
 
@@ -328,37 +318,37 @@ def graphBuild(args):
         log.Info(f'SeedIDs for extending : {str(set(condidate_seeds))}')
         if len(condidate_seeds) == 1:
             for condidate_seed in condidate_seeds:
-                print(f'{log.bold_green(simple_pairs[str(condidate_seed)])} {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', end="\n")
+                print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="\n")
         else:
             for n, condidate_seed in enumerate(condidate_seeds):
                 if n == 0:
-                    print(f'{log.bold_green(simple_pairs[str(condidate_seed)])} {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X >> ', end=" ")
+                    print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="  ")
                     time.sleep(0.1)
                 elif n+1 < len(condidate_seeds):
-                    print(f'{log.bold_green(simple_pairs[str(condidate_seed)])} {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X >> ', end=" ")
+                    print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="  ")
                     time.sleep(0.1)
                 else:
-                    print(f'{log.bold_green(simple_pairs[str(condidate_seed)])} {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', end="\n")
+                    print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="\n")
                     time.sleep(0.1)
             pass
-        print(log.dim('-'*80))
+        print(log.dim('-'*80), file=sys.stdout, flush=True)
     else:
-        log.section_header("Candidate seeds search start...")
+        log.section_header("Candidate seeds search start ...")
         condidate_seeds = find_condidate_seeds.SeedFinder(file_data_fna_name, id_depth, Output).condidate_seeds()  # seed_ID
         log.Info(f"{len(condidate_seeds)} contigs are used as candidate seeds")
-        print(log.dim('-'*80))
+        print(log.dim('-'*80), file=sys.stdout, flush=True)
         for n, condidate_seed in enumerate(condidate_seeds):
             # simple_pairs[str(condidate_seed)] = 'contig' + condidate_seed
             if n == 0:
-                print(f'{log.bold_green(simple_pairs[str(condidate_seed)])} {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X >> ', end=" ")
+                print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="  ")
                 time.sleep(0.1)
             elif n+1 < len(condidate_seeds):
-                print(f'{log.bold_green(simple_pairs[str(condidate_seed)])} {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X >> ', end=" ")
+                print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="  ")
                 time.sleep(0.1)
             else:
-                print(f'{log.bold_green(simple_pairs[str(condidate_seed)])} {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', end="\n")
+                print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="\n")
                 time.sleep(0.1)
-        print(log.dim('-'*80))
+        print(log.dim('-'*80), file=sys.stdout, flush=True)
             
     # Setting the number of condidate seeds
     # if len(condidate_seeds) >= args.seeds:
@@ -375,14 +365,14 @@ def graphBuild(args):
     else:
         minLink = None
 
-    log.section_header("Seeds extension start...")
+    log.section_header("Seeds extension start ...")
     # Result of update_seed_extend
     nucl_contig_depth = readsize / genomesize
     initial_connections = seeds_extension.Extend_seeds(all_connections, id_depth, id_length, link_depth, 
                                                        dynamic_sampleIDs, simple_pairs, proleptic_connections, 
                                                        minLink, nucl_contig_depth).update_seed_extend()  # The list stores contig connections
     log.section_tail("Seeds extension end.")
-    print(log.dim('-'*80))
+    print(log.dim('-'*80), file=sys.stdout, flush=True)
     # 
     initial_seeds = assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                                  id_length, id_depth, simple_pairs).Target_seeds('init')
@@ -395,7 +385,7 @@ def graphBuild(args):
     main_seeds = assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                               id_length, id_depth, simple_pairs).Target_seeds('main')
 
-    log.Info('Start generating the gfa file.')
+    log.Info('Start generating the gfa file ...')
     # Supplement the missing contig in PMATAllcontigs.txt
 
     raw_seeds = initial_seeds
@@ -429,9 +419,9 @@ def graphBuild(args):
         elif head_seq in initial_seeds:
             contig_dict[head_seq] = contig_dict[head_seq] + str(fna_seq[index].strip())
         index = index+1
-        print(f">>>>>> save gfa for {elapsed_time:.2f}s <<<<<<", end="\r")
+        # print(f">>>>>> save gfa for {elapsed_time:.2f}s <<<<<<", end="\r")
     end_time = time.time() - start_time
-    print(f">>>>>> save gfa for {end_time}s <<<<<<")
+    log.Info(f"save gfa for {end_time:.2f}s")
     ###
 
     # Output the initial gfa
@@ -442,7 +432,7 @@ def graphBuild(args):
         assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                     id_length, id_depth, simple_pairs, contig_dict).save_gfa(init_gfa, raw_seeds, 'init')
         init_gfa.close()
-        log.Info(log.dim(' >>> ') + f'{log.bold_green(str(len(raw_seeds)))}' + log.bold_green(' contigs are added to a raw graph'))
+        log.Info(f'{str(len(raw_seeds))} contigs are added to a raw graph')
     else:
         log.Error('There is no raw structure for this seeds extension result.')
 
@@ -454,11 +444,12 @@ def graphBuild(args):
         assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                     id_length, id_depth, simple_pairs, contig_dict).save_gfa(main_gfa, main_seeds, 'main')
         main_gfa.close()
-        log.Info(log.dim(' >>> ') + f'{log.bold_green(str(len(main_seeds)))}' + log.bold_green(' contigs are added to a master graph '))
+        log.Info(f'{str(len(main_seeds))} contigs are added to a master graph')
     else:
         log.Error('There is no master structure for this seeds extension result.')
 
     log.Info('Generate gfa task end.')
+    log.Info('Task over, bye!\n')
     # end_time = time.time()
     # print('Took %f second' % (end_time - start_time))
 
@@ -614,7 +605,7 @@ if __name__ == '__main__':
                                 help='Subset extraction of error-corrected ONT, CLR or HiFi data. Sampling ratio factor in 0-1. Default=1')
     # optional_group.add_argument('-rn', '--random', type=int, required=False, default=6,
     #                             help='Random number seeding when extracting subsets. Default:6')
-    optional_group.add_argument('-sd', '--subseed', required=False, default=6, type=int,
+    optional_group.add_argument('-sd', '--subseed', required=False, default=6,
                                 help='Sampling set random number seeds, Default=6')
     # optional_group.add_argument('-tl', '--trimlen', type=int, required=False, default=500,
     #                             help='ignore reads with length < this. Default: 500')
@@ -634,8 +625,6 @@ if __name__ == '__main__':
     #                             help='Filter according to the minimum path depth provided by the user')
     optional_group.add_argument("-l","--minLink", type=int, required=False, 
                                 help='Filter according to the minimum link depth provided by the user')
-    optional_group.add_argument("-m", "--mem", action="store_true", required=False,
-                                help='Flag to keep sequence data in memory to seepd up cup time')
     optional_group.add_argument('-v', '--version', action='version', version='PMAT v' + __version__,)
     autoMito_sub._action_groups.append(optional_group)
     autoMito_sub.set_defaults(func=autoMito)

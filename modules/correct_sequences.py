@@ -30,7 +30,7 @@ class ReadsPreprocess:
 
 
     def canu_correct(self, genomeSize, seq_path):
-        log.section_header("Reads correct start...")
+        log.section_header("Reads correct start ...")
         mkdir_file_path(f'{self.output_path}/correct_out')
         command = f'{self.canu_path} -correct -p PMAT -d {self.output_path}/correct_out genomeSize={genomeSize} useGrid=false batThreads={self.cpu} -{self.readstype} {seq_path}'.split(' ')
         
@@ -60,9 +60,9 @@ class ReadsPreprocess:
         '''
 
         if self.config_info()[1] == 'correct':
-            log.section_header("Reads correct start...")
+            log.section_header("Reads correct start ...")
         else:
-            log.section_header("Start using nextDenovo to correct and assemble...\n")
+            log.section_header("Start using nextDenovo to correct and assemble ...\n")
 
         command = [nextDenovo_path, self.cfg]
         # mkdri_file_path(f'{self.output_path}/correct_out/')
@@ -82,9 +82,9 @@ class ReadsPreprocess:
         
 
         if self.config_info()[1] == 'correct':
-            log.section_tail("Reads correct end...")
+            log.section_tail("Reads correct end.")
         else:
-            log.section_tail("nextDenovo for correction and assembly end...\n")
+            log.section_tail("nextDenovo for correction and assembly end.\n")
 
         cns_path = f'{self.config_info()[0]}/02.cns_align/01.seed_cns.sh.work/'
 
@@ -111,7 +111,7 @@ class ReadsPreprocess:
         Trim the output of the correction
         '''
 
-        log.section_header("Reads trim start...")
+        log.section_header("Reads trim start ...")
         mkdir_file_path(f'{self.output_path}/trim_out')
         command = f'{self.canu_path} -trim -p PMAT -d {self.output_path}/trim_out genomeSize={genomeSize} useGrid=false batThreads={self.cpu} -corrected -{self.readstype} {seq_path}'.split(' ')
         
