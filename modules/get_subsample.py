@@ -33,7 +33,7 @@ def subsample(output, corrected_seq, factor, seed=6):
     mkdir_file_path(f'{output}/subsample')
     if factor < 1:
         log.Info(f'The seed of the random number generator is {seed}')
-        log.section_header('Random select sequence start ...')
+        log.section_header('Random selection sequence start...')
         assembly_seq = os.path.join(f'{output}/subsample', f'assembly_seq_subset.{factor}.fasta')
         if os.path.exists(assembly_seq):
             log.Error(assembly_seq)
@@ -46,8 +46,7 @@ def subsample(output, corrected_seq, factor, seed=6):
             with gzip.open(corrected_seq,'rt') as unzip_fa:
                     start_time = time.time()
                     count_seq = ""
-                    # for line in tqdm(unzip_fa, desc="Random select subsets ", ascii=True):
-                    log.Info(f"Random select subsets ...")
+                    # for line in tqdm(unzip_fa, desc="Random selected subsets ", ascii=True):
                     for line in unzip_fa:
                         if line.startswith('>'):
                             count_seq = ""
@@ -56,14 +55,13 @@ def subsample(output, corrected_seq, factor, seed=6):
                         else:
                             count_seq = count_seq + line.strip()
                             dict_seq[count] = count_seq
-                    elapsed_time = time.time() - start_time
-                    log.Info(f"Random select subsets {elapsed_time:.2f}s")
+                        elapsed_time = time.time() - start_time
+                        print(f">>>>>> Random selected subsets {elapsed_time:.2f}s <<<<<<", end="\r")
         else:
             with open(corrected_seq, 'r') as fp_read:
                 start_time = time.time()
                 count_seq = ""
-                # for line in tqdm(fp_read, desc="Random select subsets ", ascii=True):
-                log.Info(f"Random select subsets ...")
+                # for line in tqdm(fp_read, desc="Random selected subsets ", ascii=True):
                 for line in fp_read:
                     if line.startswith('>'):
                         count_seq = ""
@@ -72,8 +70,8 @@ def subsample(output, corrected_seq, factor, seed=6):
                     else:
                         count_seq = count_seq + line.strip()
                         dict_seq[count] = count_seq
-                elapsed_time = time.time() - start_time
-                log.Info(f"Random select subsets {elapsed_time:.2f}s")
+                    elapsed_time = time.time() - start_time
+                    print(f">>>>>> Random selected subsets {elapsed_time:.2f}s <<<<<<", end="\r")
 
         # Random number sequence generation
         length = int(factor*count)
@@ -102,24 +100,22 @@ def subsample(output, corrected_seq, factor, seed=6):
             with open(assembly_seq, 'w') as fp_result:
                 with gzip.open(corrected_seq,'rt') as unzip_fa:
                         start_time = time.time()
-                        # for line in tqdm(unzip_fa, desc="Random select subsets ", ascii=True):
-                        log.Info(f"Formatting in progress ...")
+                        # for line in tqdm(unzip_fa, desc="Random selected subsets ", ascii=True):
                         for line in unzip_fa:
                             line = line.strip()
                             fp_result.write(line+'\n')
-                        elapsed_time = time.time() - start_time
-                        log.Info(f"Formatting in progress {elapsed_time:.2f}s")
+                            elapsed_time = time.time() - start_time
+                            print(f">>>>>> Random selected subsets {elapsed_time:.2f}s <<<<<<", end="\r")
         else:
             with open(assembly_seq, 'w') as fp_result:
                 with open(corrected_seq, 'r') as fp_read:
                     start_time = time.time()
-                    # for line in tqdm(fp_read, desc="Random select subsets ", ascii=True):
-                    log.Info(f"Formatting in progress ...")
+                    # for line in tqdm(fp_read, desc="Random selected subsets ", ascii=True):
                     for line in fp_read:
                         line = line.strip()
                         fp_result.write(line+'\n')
-                    elapsed_time = time.time() - start_time
-                    log.Info(f"Formatting in progress {elapsed_time:.2f}s")
+                        elapsed_time = time.time() - start_time
+                        print(f">>>>>> Random selected subsets {elapsed_time:.2f}s <<<<<<", end="\r")
 
         assembly_seq_path = assembly_seq
 

@@ -38,7 +38,7 @@ def fq2fa(filename):
 
     root, ext = os.path.splitext(filename)
     if ext == '.gz':
-        log.section_header('Unzip file ...')
+        log.section_header('Unzip file...')
         faroot, gaext = os.path.splitext(root)
         with gzip.open(filename, 'rt') as raw_data:  # Open file for reading with gzip and text mode
             with open(faroot + '.fa', 'w') as ungzip_fa:
@@ -47,7 +47,6 @@ def fq2fa(filename):
                     line_num = 0
                     start_time = time.time()
                     # for line in tqdm(raw_data, desc="Convert format ", ascii=True):
-                    log.Info(f"Convert format ...")
                     for line in raw_data:
                         line_num += 1
                         id_line = 1 + (id_num - 1)*4
@@ -57,14 +56,13 @@ def fq2fa(filename):
                         elif line_num == id_line + 1:
                             id_num += 1
                             ungzip_fa.write(line+'\n')
-                    elapsed_time = time.time() - start_time
-                    log.Info(f"Convert format {elapsed_time:.2f}s")
+                        elapsed_time = time.time() - start_time
+                        print(f">>>>>> Convert format {elapsed_time:.2f}s <<<<<<", end="\r")
 
                 elif check_file_format(filename) == 'fasta':
                     id_num = 0
                     start_time = time.time()
                     # for line in tqdm(raw_data, desc="Unzip file ", ascii=True):
-                    log.Info(f"Convert format ...")
                     for line in raw_data:
                         line = line.strip()
                         if line.startswith('>'):
@@ -72,8 +70,8 @@ def fq2fa(filename):
                             ungzip_fa.write(f'>{id_num}\n')  # Write FASTA header
                         else:
                             ungzip_fa.write(line+'\n')
-                    elapsed_time = time.time() - start_time
-                    log.Info(f"Convert format {elapsed_time:.2f}s")
+                        elapsed_time = time.time() - start_time
+                        print(f">>>>>> Convert format {elapsed_time:.2f}s <<<<<<", end="\r")
 
                 else:
                     log.Info('Input data error')
@@ -82,14 +80,13 @@ def fq2fa(filename):
         fa_seq = f'{faroot}.fa'
 
     elif check_file_format(filename) == 'fastq':
-        log.section_header('convert the fastq to fasta ...')
+        log.section_header('convert the fastq to fasta...')
         with open(filename, 'r') as raw_data:
             with open(root + '.fa', 'w') as ungzip_fa:
                 id_num = 1
                 line_num = 0
                 start_time = time.time()
                 # for line in tqdm(raw_data, desc="Convert format ", ascii=True):
-                log.Info(f"Convert format ...")
                 for line in raw_data:
                     line_num += 1
                     id_line = 1 + (id_num - 1)*4
@@ -99,8 +96,8 @@ def fq2fa(filename):
                     elif line_num == id_line + 1:
                         id_num += 1
                         ungzip_fa.write(line+'\n')
-                elapsed_time = time.time() - start_time
-                log.Info(f"Convert format {elapsed_time:.2f}s")
+                    elapsed_time = time.time() - start_time
+                    print(f">>>>>> Convert format {elapsed_time:.2f}s <<<<<<", end="\r")
 
         log.section_tail('convert end.')
         fa_seq = f'{root}.fa'
