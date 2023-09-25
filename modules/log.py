@@ -21,12 +21,12 @@ class Log:
         self.DIM = '\033[2m'
 
     def log(self, message=''):
-        print(message, file=sys.stderr, flush=True, end='\n')
+        print(message, file=sys.stdout, flush=True, end='\n')
 
     def Info(self, message=''):
         time = self.get_timestamp()
         time_str = self.dim(time)
-        print('[' + self.bold_blue(' INFO ') + time_str + ' ] ' + message, file=sys.stderr, flush=True, end='\n')
+        print('[' + self.bold_blue(' INFO ') + time_str + ' ] ' + message, file=sys.stdout, flush=True, end='\n')
 
     def Error(self, message=''):
         time = self.get_timestamp()
@@ -41,20 +41,20 @@ class Log:
 
     def section_header(self, text):
         time = self.get_timestamp()
-        time_str = self.dim(">>> " + time)
+        time_str = self.dim(time)
         header = self.bold_blue(text)
-        print(header + '\n' + time_str, file=sys.stderr, flush=True)
+        print(header + '\n' + time_str, file=sys.stdout, flush=True)
 
     def section_tail(self, text):
         time = self.get_timestamp()
-        time_str = self.dim(">>> " + time)
+        time_str = self.dim(time)
         tail = self.bold_blue(text)
-        print(tail + ' ' + time_str, file=sys.stderr, flush=True)
+        print(tail + '\n' + time_str, file=sys.stdout, flush=True)
 
 
     def get_path(self, text):
-        get_path = self.purple(text)
-        print(get_path)
+        get_path = text
+        print(get_path, file=sys.stdout, flush=True, end='\n')
 
 
     

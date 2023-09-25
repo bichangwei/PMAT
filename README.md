@@ -30,9 +30,9 @@ PMAT --help
 ```
 Install by downloading the source codes
 ```sh
-wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.2.0.tar.gz
-tar -zxvf v1.2.0.tar.gz
-cd PMAT-1.2.0/bin
+wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.3.0.tar.gz
+tar -zxvf v1.3.0.tar.gz
+cd PMAT-1.3.0/bin
 chmod a+x PMAT
 PMAT --help
 ```
@@ -40,8 +40,8 @@ PMAT --help
 ## <a name="C2">Requirement</a>
 
 - [**BLASTn**](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)  Needs to be installed in `PATH`.
-- [**Singularity**](https://github.com/YanshuQu/runAssembly)
-
+- [**Singularity**](https://github.com/YanshuQu/runAssembly) is required for PMAT versions earlier than 1.30. You can find installation instructions [here](https://github.com/YanshuQu/runAssembly).
+- [**Apptainer**](https://github.com/apptainer/apptainer/blob/main/INSTALL.md) is required for PMAT versions 1.30 and later. Installation instructions can be found [here](https://github.com/apptainer/apptainer/blob/main/INSTALL.md).
 - [**Canu**](https://github.com/marbl/canu) or [**NextDenovo**](https://github.com/Nextomics/NextDenovo) is required for CLR or ONT sequencing data, which is suggested to be installed in `PATH`.
 
 ## <a name="C3">Options and usage</a>
@@ -59,7 +59,7 @@ usage: PMAT <command> <arguments>
 |__|       |_|    \__/    |_| /_/          \_\      |_|      
 
 PMAT            An efficient assembly toolkit for plant mitochondrial genome
-Version         1.2.0
+Version         1.3.0
 Contributors    Bi,C. and Han,F.
 Email           bichwei@njfu.edu.cn, hanfc@caf.ac.cn
 
@@ -260,12 +260,10 @@ PMAT autoMito -i ONT.fasta.gz -o ./test_ont -st ont -g 100m -cs canu -cp path/ca
   - `*/assembly_result/PMAT_master.gfa`, The optimized assembly graph of mitogenome
 
 ## <a name="C8">Version</a>
-PMAT version 1.2.0 (23/8/3)</br>
+PMAT version 1.3.0 (23/9/25)</br>
 Updates:
-- Improve the help documentation for user readability.
-- Optimized path handling logic to dynamically retrieve the current directory instead of using hard-coded home directory paths.
-- Users can now directly clone the software to their local servers using Git.
-- Added [test data](#C6) to the repository, allowing users to quickly obtain assembly results.
+- In the new version, Apptainer is used instead of Singularity. Please ensure that Apptainer is correctly installed.
+- In this new version, you can perform multiple tasks simultaneously.
 
 ## <a name="C9">Citing PMAT</a>
 Bi C, Shen F, Han F, Qu Y, et al. PMAT: an efficient plant mitogenome assembly toolkit using ultra-low coverage HiFi sequencing data. Unpublished. </br>
