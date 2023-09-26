@@ -122,6 +122,7 @@ optional arguments:
   -cpu CPU              The number of threads. Default: 8
   -l MINLINK, --minLink MINLINK
                         Filter according to the minimum link depth provided by the user
+  -m, --mem             Flag to keep sequence data in memory to seepd up cup time
   -v, --version         show program's version and exit
 ```
 
