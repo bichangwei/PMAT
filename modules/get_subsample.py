@@ -104,9 +104,17 @@ def subsample(output, corrected_seq, factor, seed=6):
                         start_time = time.time()
                         # for line in tqdm(unzip_fa, desc="Random select subsets ", ascii=True):
                         log.Info(f"Formatting in progress ...")
+                        seq_str = ''
                         for line in unzip_fa:
                             line = line.strip()
-                            fp_result.write(line+'\n')
+                            if line.startswith('>'):
+                                if seq_str:
+                                    fp_result.write(seq_str+'\n')
+                                fp_result.write(line+'\n')
+                                seq_str = ''    
+                            else:
+                                seq_str += line
+                        fp_result.write(seq_str+'\n')
                         elapsed_time = time.time() - start_time
                         log.Info(f"Formatting in progress {elapsed_time:.2f}s")
         else:
@@ -115,9 +123,17 @@ def subsample(output, corrected_seq, factor, seed=6):
                     start_time = time.time()
                     # for line in tqdm(fp_read, desc="Random select subsets ", ascii=True):
                     log.Info(f"Formatting in progress ...")
+                    seq_str = ''
                     for line in fp_read:
                         line = line.strip()
-                        fp_result.write(line+'\n')
+                        if line.startswith('>'):
+                            if seq_str:
+                                fp_result.write(seq_str+'\n')
+                            fp_result.write(line+'\n')
+                            seq_str = ''    
+                        else:
+                            seq_str += line
+                    fp_result.write(seq_str+'\n')
                     elapsed_time = time.time() - start_time
                     log.Info(f"Formatting in progress {elapsed_time:.2f}s")
 

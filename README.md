@@ -30,9 +30,9 @@ PMAT --help
 ```
 Install by downloading the source codes
 ```sh
-wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.3.0.tar.gz
-tar -zxvf v1.3.0.tar.gz
-cd PMAT-1.3.0/bin
+wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.3.1.tar.gz
+tar -zxvf v1.3.1.tar.gz
+cd PMAT-1.3.1/bin
 chmod a+x PMAT
 PMAT --help
 ```
@@ -59,7 +59,7 @@ usage: PMAT <command> <arguments>
 |__|       |_|    \__/    |_| /_/          \_\      |_|      
 
 PMAT            An efficient assembly toolkit for plant mitochondrial genome
-Version         1.3.0
+Version         1.3.1
 Contributors    Bi,C. and Han,F.
 Email           bichwei@njfu.edu.cn, hanfc@caf.ac.cn
 
