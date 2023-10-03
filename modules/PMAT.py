@@ -562,7 +562,7 @@ if __name__ == '__main__':
     parser.add_argument('-v', '--version', action='version', version='PMAT v' + __version__)
 
     sub_description ="""
-    autoMito    One-step de novo assembly of mitochondrial genome. 
+    autoMito    One-step de novo assembly of the mitochondrial genome. 
                 This command corrects the raw ONT/CLR data or uses 
                 the corrected data or HiFi for assembly directly. 
                 Based on the assembly result, automatically select 
@@ -626,10 +626,10 @@ if __name__ == '__main__':
     #                             help='Filter according to the minimum contig length provided by the user')
     # optional_group.add_argument("-p","--minPath", type=int, required=False, 
     #                             help='Filter according to the minimum path depth provided by the user')
-    optional_group.add_argument("-l","--minLink", type=int, required=False, 
+    optional_group.add_argument("-l","--minLink", type=float, required=False, 
                                 help='Filter according to the minimum link depth provided by the user')
     optional_group.add_argument("-m", "--mem", action="store_true", required=False,
-                                help='Flag to keep sequence data in memory to seepd up cup time')
+                                help='Flag to keep sequence data in memory to speed up cup time')
     optional_group.add_argument('-v', '--version', action='version', version='PMAT v' + __version__,)
     autoMito_sub._action_groups.append(optional_group)
     autoMito_sub.set_defaults(func=autoMito)
@@ -646,9 +646,9 @@ if __name__ == '__main__':
 
     required_group = graphBuild_sub.add_argument_group('Required arguments')
     required_group.add_argument("-c","--ContigGraph", type=str, required=True, 
-                                help='PMATContigGraph.txt: a file that can get all connections bewteen contigs.')
+                                help='PMATContigGraph.txt: a file that can get all connections between contigs.')
     required_group.add_argument("-a","--AllContigs", type=str, required=True, 
-                                help='PMATAllContigs.fna: a file that can get all information of contigs.')
+                                help='PMATAllContigs.fna: a file that can get all the information of contigs.')
     required_group.add_argument('-o', '--output', required=True,
                                 help='output directory')
     required_group.add_argument("-gs","--genomesize", type=str, required=True, 
@@ -664,7 +664,7 @@ if __name__ == '__main__':
     #                             help='Filter according to the minimum contig length provided by the user')
     #***# optional_group.add_argument("-p","--minPath", type=int, required=False, 
     #                             help='Filter according to the minimum path depth provided by the user')
-    optional_group.add_argument("-l","--minLink", type=int, required=False, 
+    optional_group.add_argument("-l","--minLink", type=float, required=False, 
                                 help='Filter according to the minimum link depth provided by the user')
     optional_group.add_argument('-v', '--version', action='version', version='PMAT v' + __version__,)
     graphBuild_sub._action_groups.append(optional_group)
