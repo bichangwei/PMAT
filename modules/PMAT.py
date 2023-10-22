@@ -95,7 +95,7 @@ def autoMito(args):
     if args.seqtype.lower() == 'hifi':
         high_quality_seq = fastq2fa.fq2fa(args.input)
     else:
-        if args.task == 'autoMito':
+        if args.task == 'all':
             log.Info('Run autoMito processes ...')
             if args.correctsoft.lower() == 'nextdenovo':
 
