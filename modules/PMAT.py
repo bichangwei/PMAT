@@ -83,7 +83,7 @@ def autoMito(args):
     elif str(args.genomesize).lower().endswith('k'):
         genomesize = float(str(args.genomesize).lower().replace('k', '')) * 1000
     else:
-        log.Warning('Please enter the correct value for the genomesize parameter, such as 1G, 100M.')
+        genomesize = float(args.genomesize)
 
 
     if args.seqtype.lower() == 'ont':
@@ -104,8 +104,8 @@ def autoMito(args):
                 else:
                     log.Warning('Missing config file, which was required parament when using nextDenovo to correct errors')
             elif args.correctsoft == 'canu':
-                if check_file_format(args.input, 'fastq') != 'fastq':
-                    log.Warning('Please enter the correct fastq file')
+                if check_file_format(args.input) != 'fastq' and check_file_format(args.input) != 'fasta':
+                    log.Warning('Please input the raw data')
                 else:
                     log.get_path('Raw data : ' + args.input)
                     high_quality_seq = correct_sequences.ReadsPreprocess(CANU_PATH, args.cpu, readstype, Output).canu_correct(genomesize, args.input)
