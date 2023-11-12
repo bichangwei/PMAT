@@ -111,7 +111,7 @@ class ReadsPreprocess:
         Trim the output of the correction
         '''
         seq_path = os.path.abspath(seq_path)
-
+        
         log.section_header("Reads trim start ...")
         mkdir_file_path(f'{self.output_path}/trim_out')
         command = f'{self.canu_path} -trim -p PMAT -d {self.output_path}/trim_out genomeSize={genomeSize} useGrid=false batThreads={self.cpu} -corrected -{self.readstype} {seq_path}'.split(' ')

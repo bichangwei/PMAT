@@ -30,9 +30,9 @@ PMAT --help
 ```
 Install by downloading the source codes
 ```sh
-wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.3.1.tar.gz
-tar -zxvf v1.3.1.tar.gz
-cd PMAT-1.3.1/bin
+wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.4.0.tar.gz
+tar -zxvf v1.4.0.tar.gz
+cd PMAT-1.4.0/bin
 chmod a+x PMAT
 PMAT --help
 ```
@@ -59,7 +59,7 @@ usage: PMAT <command> <arguments>
 |__|       |_|    \__/    |_| /_/          \_\      |_|      
 
 PMAT            An efficient assembly toolkit for plant mitochondrial genome
-Version         1.3.1
+Version         1.4.0
 Contributors    Bi,C. and Han,F.
 Email           bichwei@njfu.edu.cn, hanfc@caf.ac.cn
 
@@ -101,6 +101,11 @@ optional arguments:
                         all/p1/ Default: all
                         all : De novo assembly including error correction for ONT/CLR data and no error correction for HiFi data
                         p1  : Import error-corrected ONT/CLR data for direct assembly
+  -tp TYPE, --type TYPE
+                        mt/pt/all Default: mt
+                        mt   : Assembling the mitochondrial genome
+                        pt   : Assembling the chloroplast genome
+                        all  : Assembling the mitochondrial and chloroplast genomes
   -cs CORRECTSOFT, --correctsoft CORRECTSOFT
                         Correcting software using nextDenovo or Canu. Default: NextDenovo
   -cp CANU, --canu CANU
@@ -158,6 +163,11 @@ Required arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
+  -tp TYPE, --type TYPE
+                        mt/pt/all Default: mt
+                        mt   : Assembling the mitochondrial genome
+                        pt   : Assembling the chloroplast genome
+                        all  : Assembling the mitochondrial and chloroplast genomes
   -cpu CPU              The number of threads. Default: 8
   -s SEEDS [SEEDS ...], --seeds SEEDS [SEEDS ...]
                         ContigID for extending. Multiple contigIDs should be separated by space. For example: 1 312 356
@@ -197,58 +207,37 @@ PMAT graphBuild -c ./test1/assembly_result/PMATContigGraph.txt -a ./test1/assemb
 ```
 
 **<a name="C6.2">Demo2</a>**
+1. CLR data link for Manihot esculenta:
+```
+https://www.ncbi.nlm.nih.gov/sra/?term=SRR14351878
+```
+2. then run the autoMito command for one-click assembly (CLR):
+```sh
+PMAT autoMito -i SRR14351878.fastq -o ./test_clr -st clr -g 640m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
+```
 
-1. Download a simulated Juncus effusus HiFi dataset:
-```sh
-wget https://github.com/bichangwei/PMAT/releases/download/v1.1.0/Juncus_effusus_216Mb.fa.gz
-```
-2. then run the autoMito command for one-click assembly:
-```sh
-PMAT autoMito -i Juncus_effusus_216Mb.fa.gz -o ./test2 -st hifi -g 225m -m
-```
-3. then use the graphBuild command to manually select seeds for assembly (used when the autoMito command fails to get a GFA file automatically):
-```sh
-# Based on the PMATContigGraph.txt file, manually select 3 or more contigs that match the depth of mitochondrial genome sequencing
-PMAT graphBuild -c ./test2/assembly_result/PMATContigGraph.txt -a ./test2/assembly_result/PMATAllContigs.fna -gs 225m -rs ./test2/subsample/assembly_seq.cut20K.fasta -o ./test2_gfa -s 1 2 457
-```
-4. PMAT runtime for different number of threads
-
-```
-8 CPUs: 9m37.173s; 16 CPUs: 6m12.433s; 32 CPUs: 4m49.595s; 64 CPUs: 4m40.036s
-```
 
 **<a name="C6.3">Demo3</a>**
 
-1. Download a simulated Malus domestica HiFi dataset:
+1. CLR data link for Phaseolus vulgaris:
+```
+https://www.ncbi.nlm.nih.gov/sra/?term=SRR2912756
+```
+2. then run the autoMito command for one-click assembly (CLR):
 ```sh
-wget https://github.com/bichangwei/PMAT/releases/download/v1.1.0/Malus_domestica.540Mb.fasta.gz
-```
-2. then run the autoMito command for one-click assembly:
-```sh
-PMAT autoMito -i Malus_domestica.540Mb.fasta.gz -o ./test3 -st hifi -g 703m -m
-```
-3. then use the graphBuild command to manually select seeds for assembly (used when the autoMito command fails to get gfa automatically):
-```sh
-# Based on the PMATContigGraph.txt file, manually select 3 or more contigs that match the depth of mitochondrial genome sequencing
-PMAT graphBuild -c ./test3/assembly_result/PMATContigGraph.txt -a ./test3/assembly_result/PMATAllContigs.fna -gs 225m -rs ./test3/subsample/assembly_seq.cut20K.fasta -o ./test3_gfa -s 1 2 15391
-```
-4. PMAT runtime for different number of threads
-
-```
-8 CPUs: 21m12.306s; 16 CPUs: 12m14.663s; 32 CPUs: 7m58.749s; 64 CPUs: 6m48.915s
+PMAT autoMito -i SRR2912756.fastq -o ./test_clr -st clr -g 540m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
 ```
 
-**<a name="C6.4">Demo4 (ONT or CLR)</a>**
+**<a name="C6.4">Demo4</a>**
 
-1. then run the autoMito command for one-click assembly (CLR):
-```sh
-PMAT autoMito -i CLR.fasta.gz -o ./test_clr -st clr -g 100m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
+1. ONT data link for Populus deltoides:
 ```
-2. then run the autoMito command for one-click assembly (ONT):
-```sh
-PMAT autoMito -i ONT.fasta.gz -o ./test_ont -st ont -g 100m -cs canu -cp path/canu -m
+https://www.ncbi.nlm.nih.gov/sra/?term=SRR12202038
 ```
-
+2. then run the autoMito command for one-click assembly (CLR):
+```sh
+PMAT autoMito -i SRR12202038.fastq -o ./test_clr -st clr -g 430m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
+```
 
 
 ## <a name="C7">Resulting files</a>
@@ -257,14 +246,15 @@ PMAT autoMito -i ONT.fasta.gz -o ./test_ont -st ont -g 100m -cs canu -cp path/ca
   - `*/subsample/assembly_seq.cut20K.fasta`, The trimmed data for assembly
   - `*/assembly_result/PMATAllContigs.fna`, The assembly result contains contig sequences
   - `*/assembly_result/PMATContigGraph.txt`, The assembly result contains contig linking relationships
-  - `*/assembly_result/PMAT_raw.gfa`, The initial assembly graph of mitogenome
-  - `*/assembly_result/PMAT_master.gfa`, The optimized assembly graph of mitogenome
+  - `*/assembly_result/PMAT_mt_raw.gfa`, The initial assembly graph of mitogenome
+  - `*/assembly_result/PMAT_mt_master.gfa`, The optimized assembly graph of mitogenome
+  - `*/assembly_result/PMAT_pt_raw.gfa`, The initial assembly graph of chloroplast genome
+  - `*/assembly_result/PMAT_pt_master.gfa`, The initial assembly graph of chloroplast genome
 
 ## <a name="C8">Version</a>
-PMAT version 1.3.0 (23/9/25)</br>
+PMAT version 1.4.0 (23/11/12)</br>
 Updates:
-- In this new version, Apptainer is used instead of Singularity. Please ensure that Apptainer is correctly installed.
-- In this new version, you can perform multiple tasks simultaneously.
+- In the new version, we've added '-tp' for separate mitochondrial and chloroplast genome assembly.
 
 ## <a name="C9">Citing PMAT</a>
 Bi C, Shen F, Han F, Qu Y, et al. PMAT: an efficient plant mitogenome assembly toolkit using ultra-low coverage HiFi sequencing data. Unpublished. </br>

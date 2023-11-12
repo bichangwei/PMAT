@@ -95,7 +95,7 @@ class SeedFinder:
         PCGs_len = self.PCGs_len
         blast_info = [] # [['atp1', 'contig00001', '90.9', '501'], ['apt2', 'contig00002', '891', '1030'] ...]
         redundant_seed = set()
-        with open(f'{self.output_path}/PMAT_PCGs_blastn.txt', 'w') as blt:
+        with open(f'{self.output_path}/PMAT_mt_blastn.txt', 'w') as blt:
             for line in self.blastn_out.decode().splitlines():
                 blt.write(line+'\n')
                 lines = line.split()
