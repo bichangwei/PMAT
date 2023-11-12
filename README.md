@@ -206,7 +206,28 @@ PMAT graphBuild -c ./test1/assembly_result/PMATContigGraph.txt -a ./test1/assemb
 8 CPUs: 13m25.342s; 16 CPUs: 9m29.853s; 32 CPUs: 8m42.429s; 64 CPUs: 7m57.279s
 ```
 
-**<a name="C6.2">Demo2</a>**
+**<a name="C6.3">Demo2</a>**
+
+1. Download a simulated Malus domestica HiFi dataset:
+```sh
+wget https://github.com/bichangwei/PMAT/releases/download/v1.1.0/Malus_domestica.540Mb.fasta.gz
+```
+2. then run the autoMito command for one-click assembly:
+```sh
+PMAT autoMito -i Malus_domestica.540Mb.fasta.gz -o ./test3 -st hifi -g 703m -m
+```
+3. then use the graphBuild command to manually select seeds for assembly (used when the autoMito command fails to get gfa automatically):
+```sh
+# Based on the PMATContigGraph.txt file, manually select 3 or more contigs that match the depth of mitochondrial genome sequencing
+PMAT graphBuild -c ./test3/assembly_result/PMATContigGraph.txt -a ./test3/assembly_result/PMATAllContigs.fna -gs 225m -rs ./test3/subsample/assembly_seq.cut20K.fasta -o ./test3_gfa -s 1 2 15391
+```
+4. PMAT runtime for different number of threads
+
+```
+8 CPUs: 21m12.306s; 16 CPUs: 12m14.663s; 32 CPUs: 7m58.749s; 64 CPUs: 6m48.915s
+```
+
+**<a name="C6.2">Demo3</a>**
 1. CLR data link for Manihot esculenta:
 ```
 https://www.ncbi.nlm.nih.gov/sra/?term=SRR14351878
@@ -217,7 +238,7 @@ PMAT autoMito -i SRR14351878.fastq -o ./test_clr -st clr -g 640m -cs nextDenovo 
 ```
 
 
-**<a name="C6.3">Demo3</a>**
+**<a name="C6.3">Demo4</a>**
 
 1. CLR data link for Phaseolus vulgaris:
 ```
@@ -228,7 +249,7 @@ https://www.ncbi.nlm.nih.gov/sra/?term=SRR2912756
 PMAT autoMito -i SRR2912756.fastq -o ./test_clr -st clr -g 540m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
 ```
 
-**<a name="C6.4">Demo4</a>**
+**<a name="C6.4">Demo5</a>**
 
 1. ONT data link for Populus deltoides:
 ```
