@@ -234,9 +234,9 @@ PMAT autoMito -i SRR2912756.fastq -o ./test_clr -st clr -g 540m -cs nextDenovo -
 ```
 https://www.ncbi.nlm.nih.gov/sra/?term=SRR12202038
 ```
-2. then run the autoMito command for one-click assembly (CLR):
+2. then run the autoMito command for one-click assembly (ONT):
 ```sh
-PMAT autoMito -i SRR12202038.fastq -o ./test_clr -st clr -g 430m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
+PMAT autoMito -i SRR12202038.fastq -o ./test_clr -st ont -g 430m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
 ```
 
 
