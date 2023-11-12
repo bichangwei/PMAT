@@ -249,7 +249,7 @@ PMAT autoMito -i SRR12202038.fastq -o ./test_clr -st clr -g 430m -cs nextDenovo 
   - `*/assembly_result/PMAT_mt_raw.gfa`, The initial assembly graph of mitogenome
   - `*/assembly_result/PMAT_mt_master.gfa`, The optimized assembly graph of mitogenome
   - `*/assembly_result/PMAT_pt_raw.gfa`, The initial assembly graph of chloroplast genome
-  - `*/assembly_result/PMAT_pt_master.gfa`, The initial assembly graph of chloroplast genome
+  - `*/assembly_result/PMAT_pt_master.gfa`, The optimized assembly graph of chloroplast genome
 
 ## <a name="C8">Version</a>
 PMAT version 1.4.0 (23/11/12)</br>
