@@ -227,37 +227,26 @@ PMAT graphBuild -c ./test3/assembly_result/PMATContigGraph.txt -a ./test3/assemb
 8 CPUs: 21m12.306s; 16 CPUs: 12m14.663s; 32 CPUs: 7m58.749s; 64 CPUs: 6m48.915s
 ```
 
-**<a name="C6.2">Demo3</a>**
-1. CLR data link for Manihot esculenta:
+**<a name="C6.3">Demo3</a>**
+
+1. Download tested CLR data for Phaseolus vulgaris using IBM Aspera:
 ```
-https://www.ncbi.nlm.nih.gov/sra/?term=SRR14351878
+ascp -v -QT -l 400m -P33001 -k1 -i ~/.aspera/connect/etc/asperaweb_id_dsa.openssh era-fasp@fasp.sra.ebi.ac.uk:/vol1/fastq/SRR291/006/SRR2912756/SRR2912756_subreads.fastq.gz .
 ```
 2. then run the autoMito command for one-click assembly (CLR):
 ```sh
-PMAT autoMito -i SRR14351878.fastq -o ./test_clr -st clr -g 640m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
+PMAT autoMito -i SRR2912756_subreads.fastq.gz -o ./test_clr -st clr -g 540m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
 ```
 
+**<a name="C6.4">Demo4</a>**
 
-**<a name="C6.3">Demo4</a>**
-
-1. CLR data link for Phaseolus vulgaris:
+1. Download tested ONT data for Populus deltoides using IBM Aspera:
 ```
-https://www.ncbi.nlm.nih.gov/sra/?term=SRR2912756
-```
-2. then run the autoMito command for one-click assembly (CLR):
-```sh
-PMAT autoMito -i SRR2912756.fastq -o ./test_clr -st clr -g 540m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
-```
-
-**<a name="C6.4">Demo5</a>**
-
-1. ONT data link for Populus deltoides:
-```
-https://www.ncbi.nlm.nih.gov/sra/?term=SRR12202038
+ascp -v -QT -l 400m -P33001 -k1 -i ~/.aspera/connect/etc/asperaweb_id_dsa.openssh era-fasp@fasp.sra.ebi.ac.uk:/vol1/fastq/SRR122/038/SRR12202038/SRR12202038_1.fastq.gz  .
 ```
 2. then run the autoMito command for one-click assembly (ONT):
 ```sh
-PMAT autoMito -i SRR12202038.fastq -o ./test_clr -st ont -g 430m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
+PMAT autoMito -i SRR12202038_1.fastq.gz -o ./test_ont -st ont -g 430m -cs nextDenovo -np path/nextDenovo -cp path/canu -cfg nextdenovo.cfg -m
 ```
 
 
