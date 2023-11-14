@@ -43,6 +43,7 @@ import correct_sequences
 import break_long_reads
 import runassembly
 import fastq2fa
+import disentangle_mitogenome_from_graph
 from progressbar import ProgressBar, ProgressBar, Percentage, Bar
 # from tqdm import tqdm
 
@@ -412,10 +413,27 @@ def gfa_result(file_data_fna_name, Output, id_length, id_depth, simple_pairs, in
 
     if len(main_seeds) != 0:
         main_gfa = open(main_output, 'w')
-        assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
+        mt_main_connections = assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                     id_length, id_depth, simple_pairs, contig_dict).save_gfa(main_gfa, main_seeds, 'main')
         main_gfa.close()
         log.Info(f'{str(len(main_seeds))} contigs are added to a master graph')
+        if mtpt == 'mt':
+            try:
+                log.section_header("PMAT attempting automated loop resolution ...")
+                loop_result = disentangle_mitogenome_from_graph.MasterLoops(id_depth, id_length, mt_main_connections, main_output, Output).getloop()
+                if loop_result:
+                    for num, loop_connection in enumerate(loop_result):
+                        num += 1
+                        loop_output = os.path.join(Output, f'gfa_result/PMAT_{mtpt}_loop_{num}.gfa')
+                        loop_gfa = open(loop_output, 'w')
+                        mt_main_connections = assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
+                                                    id_length, id_depth, simple_pairs, contig_dict).save_loop_gfa(loop_gfa, loop_connection)
+                        loop_gfa.close()
+                    log.Info("Automated loop resolution completed. Please perform a manual inspection.")
+                else:
+                    log.Error("Unable to generate cyclic structure.")
+            except:
+                log.Info("PMAT unable to complete automatic loop resolution.")
     else:
         log.Error('There is no master structure for this seeds extension result.')
 

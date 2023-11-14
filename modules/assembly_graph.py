@@ -151,3 +151,51 @@ class AssemblyGraph:
                 gfa.write(right_contig.split()[0] + '\t')
                 gfa.write(right_edge + '\t' + '0M' + '\n')
             pass
+        return init_main_connections
+    
+
+    def save_loop_gfa(self, gfa, loop_connections):
+
+        start_time = time.time()
+        seeds = set()
+        for connection in loop_connections:
+            for left_contig, right_contig in connection.items():
+                left_contig_id = left_contig.strip().split()[0]
+                right_contig_id = right_contig.strip().split()[0]
+                seeds.add(left_contig_id)
+                seeds.add(right_contig_id)
+            
+        for i, ctg in enumerate(seeds):
+            ctg_s = ''
+            if "copy" in str(ctg):
+                ctg_s = str(ctg).split('_')[0]
+            else:
+                ctg_s = ctg
+            ctg_RC = int(self.id_length[str(ctg_s)])*float(self.id_depth[str(ctg_s)])
+            gfa.write("S\t{}\t{}\tLN:i:{}\tRC:i:{}\n".format(ctg, self.contig_dict[str(ctg_s)], self.id_length[str(ctg_s)], ctg_RC))
+
+        #Output connections between seeds
+        for contig_connection in loop_connections:
+            elapsed_time = time.time() - start_time
+            for left_contig, right_contig in contig_connection.items():
+                gfa.write('L' + '\t' + left_contig.split()[0] + '\t')
+                left_edge = left_contig.split()[1]
+                right_edge = right_contig.split()[1]
+                if left_contig.split()[1]!=right_contig.split()[1]:
+                    if(left_contig.split()[1]=="3'"):
+                        left_edge='+'
+                        right_edge='+'
+                    else:
+                        left_edge='-'
+                        right_edge='-'
+                else:
+                    if (left_contig.split()[1] == "3'"):
+                        left_edge = '+'
+                        right_edge = '-'
+                    else:
+                        left_edge= '-'
+                        right_edge= '+'
+                gfa.write(left_edge + '\t')
+                gfa.write(right_contig.split()[0] + '\t')
+                gfa.write(right_edge + '\t' + '0M' + '\n')
+            pass

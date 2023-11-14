@@ -30,9 +30,9 @@ PMAT --help
 ```
 Install by downloading the source codes
 ```sh
-wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.4.0.tar.gz
-tar -zxvf v1.4.0.tar.gz
-cd PMAT-1.4.0/bin
+wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.5.0.tar.gz
+tar -zxvf v1.5.0.tar.gz
+cd PMAT-1.5.0/bin
 chmod a+x PMAT
 PMAT --help
 ```
@@ -59,7 +59,7 @@ usage: PMAT <command> <arguments>
 |__|       |_|    \__/    |_| /_/          \_\      |_|      
 
 PMAT            An efficient assembly toolkit for plant mitochondrial genome
-Version         1.4.0
+Version         1.5.0
 Contributors    Bi,C. and Han,F.
 Email           bichwei@njfu.edu.cn, hanfc@caf.ac.cn
 
@@ -262,6 +262,10 @@ PMAT autoMito -i SRR12202038_1.fastq.gz -o ./test_ont -st ont -g 430m -cs nextDe
   - `*/assembly_result/PMAT_pt_master.gfa`, The optimized assembly graph of the chloroplast genome
 
 ## <a name="C8">Version</a>
+PMAT version 1.5.0 (23/11/14)</br>
+Updates:
+- In this version, PMAT adds automatic unloop function.
+
 PMAT version 1.4.0 (23/11/12)</br>
 Updates:
 - In this version, we add a '-tp' parameter for separate mitochondrial and chloroplast genome assembly.
