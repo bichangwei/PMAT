@@ -264,11 +264,11 @@ PMAT autoMito -i SRR12202038_1.fastq.gz -o ./test_ont -st ont -g 430m -cs nextDe
 ## <a name="C8">Version</a>
 PMAT version 1.5.0 (23/11/14)</br>
 Updates:
-- In this version, PMAT adds automatic unloop function.
+- In this version, PMAT adds a new script "disentangle_mitogenome_from_graph.py" to export all possible conformations in FASTA files.
 
 PMAT version 1.4.0 (23/11/12)</br>
 Updates:
-- In this version, we add a '-tp' parameter for separate mitochondrial and chloroplast genome assembly.
+- In this version, we add a '-tp' parameter to separate mitochondrial and chloroplast genome assembly.
 
 PMAT version 1.3.0 (23/9/25)</br>
 Updates:
