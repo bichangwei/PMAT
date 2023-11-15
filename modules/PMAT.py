@@ -44,6 +44,7 @@ import break_long_reads
 import runassembly
 import fastq2fa
 import disentangle_mitogenome_from_graph
+import gfa2fa
 from progressbar import ProgressBar, ProgressBar, Percentage, Bar
 # from tqdm import tqdm
 
@@ -426,9 +427,13 @@ def gfa_result(file_data_fna_name, Output, id_length, id_depth, simple_pairs, in
                         num += 1
                         loop_output = os.path.join(Output, f'gfa_result/PMAT_{mtpt}_loop_{num}.gfa')
                         loop_gfa = open(loop_output, 'w')
-                        mt_main_connections = assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
+                        assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                                     id_length, id_depth, simple_pairs, contig_dict).save_loop_gfa(loop_gfa, loop_connection)
                         loop_gfa.close()
+
+                        loop_gfa2fa = os.path.join(Output, f'gfa_result/PMAT_{mtpt}_loop_{num}.fasta')
+                        gfa2fa.gfa2fa(loop_output, loop_gfa2fa)
+
                     log.Info("Automated loop resolution completed. Please perform a manual inspection.")
                 else:
                     log.Error("Unable to generate cyclic structure.")
