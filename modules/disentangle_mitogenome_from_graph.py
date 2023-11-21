@@ -10,12 +10,14 @@ automatically resolving loops in the master results.
 import re
 import os
 import shutil
+import signal
 # from log import Log
 from collections import Counter
 import subprocess
 import itertools
 import random
 from log import Log 
+import math
 
 log = Log()
 
@@ -43,8 +45,8 @@ class MasterLoops:
         self.median_seed, self.median_depth = self.get_median()
         self.main_length, self.main_idnum, self.main_seed, self.begin_seed, self.main_connections = self._get_all_connections_from_gfa()
         self.slim_connections, self.slim_main_idnum = self._check_bubble()
-        self.final_contig_id, self.final_rep_contig, self.final_rep_edge = self.get_final_path("5'")
-        self.head_contig_id, self.head_rep_contig, self.head_rep_edge = self.get_final_path("3'")
+        self.final_contig_id, self.final_rep_contig, self.final_rep_edge = self.get_final_path(self.begin_seed ,"5'", self.slim_connections, self.slim_main_idnum)
+        self.head_contig_id, self.head_rep_contig, self.head_rep_edge = self.get_final_path(self.begin_seed, "3'", self.slim_connections, self.slim_main_idnum)
 
     def _PCGs_length(self):
         fna = open(db_path, 'r')
@@ -78,24 +80,26 @@ class MasterLoops:
 
             # output the result of blastn and error.
             blastn_out, blastn_err = Blastn_process.communicate(timeout=None) 
-
-            # Error output
-            if blastn_err:
-                print('\nBLASTn encountered an error:\n' + blastn_err.decode())
             return blastn_out
     
     def condidate_seeds(self, qryseq):
         #Find the target contig
         PCGs_len = self._PCGs_length()
         blast_info = [] # [['atp1', 'contig00001', '90.9', '501'], ['apt2', 'contig00002', '891', '1030'] ...]
-        redundant_seed = set()
-        for line in self._Run_blastn(qryseq).decode().splitlines():
+
+        blast_out = self._Run_blastn(qryseq).decode().splitlines()
+        if len(blast_out) == 0:
+            raise Exception("No matching results")
+        for line in blast_out:
             lines = line.split()
             PCGs = re.sub(r".*_", "", lines[1])
             PCGs = re.sub(r"-.*", "", PCGs)
             # select contigs
             if PCGs in PCGs_len.keys() and int(lines[3]) > float(PCGs_len[PCGs]) * 0.9 and float(lines[2]) > 0.95:
                 blast_info.append(str(re.sub('contig0*', '', lines[0])))
+        if len(blast_info) == 0:
+            raise Exception("No matching results")
+
         return blast_info
     
     def get_median(self):
@@ -127,6 +131,64 @@ class MasterLoops:
         os.remove(temp_file)
         return median_seed, median_depth
     
+    def _delete_single_edge(self, red_connections):
+        '''
+        Delete contigs with no connection information at both sides
+        '''
+        n = 1
+        m = 0
+        simple_sampleIDs = set() # store the contig id after simplified
+        del_connections = red_connections
+        while n != m:
+            set2 = set()
+            contig_edge = {} # store id and matching edge
+            n = len(del_connections)
+            for init_connection in del_connections:
+                for left_cnt, right_cnt in init_connection.items():
+                    left_id = left_cnt.split()[0]
+                    left_edge = left_cnt.split()[1]
+                    right_id = right_cnt.split()[0]
+                    right_edge = right_cnt.split()[1]
+                    if left_id not in set2:
+                        set2.add(left_id)
+                        contig_edge[left_id] = set(list(left_edge)[0])
+
+                        if right_id not in set2:
+                            set2.add(right_id)
+                            contig_edge[right_id] = set(list(right_edge)[0])
+                            pass
+                        else:
+                            contig_edge[right_id].add(list(right_edge)[0])
+                            pass
+                    else:
+                        contig_edge[left_id].add(list(left_edge)[0])
+                        if right_id not in set2:
+                            set2.add(right_id)
+                            contig_edge[right_id] = set(list(right_edge)[0])
+                            pass
+                        else:
+                            contig_edge[right_id].add(list(right_edge)[0])
+                            pass
+            for cnt_id, cnt_edge in contig_edge.items():
+                if len(cnt_edge) == 1:
+                    set2.remove(cnt_id)
+                pass
+            for i, init_connection in enumerate(del_connections):
+                for left_cnt, right_cnt in init_connection.items():
+                    left_id = left_cnt.split()[0]
+                    left_edge = left_cnt.split()[1]
+                    right_id = right_cnt.split()[0]
+                    right_edge = right_cnt.split()[1]
+                    if left_id not in set2 or right_id not in set2:
+                        del del_connections[i]
+                    else:
+                        simple_sampleIDs.update([left_id, right_id])
+                    pass
+            m = len(del_connections)
+            simple_connectios = del_connections
+            pass
+        return simple_connectios, simple_sampleIDs
+
     def _get_all_connections_from_gfa(self):
         '''
         Reading the main gfa file;
@@ -139,16 +201,6 @@ class MasterLoops:
         rep_seed = []
         unrep_seed = []
 
-        # for line in main_gfa:
-        #     #
-        #     if re.match('L', line):
-        #         connection = {}
-        #         lio = line.strip().split('\t')
-        #         contig_and_UTR1 = lio[1] + " " + lio[2]
-        #         contig_and_UTR2 = lio[3] + " " + lio[4]  # Put the corresponding contig and edge number into the list
-        #         connection[contig_and_UTR1] = contig_and_UTR2
-        #         # main_connections.append(connection)
-        #         idstroe.extend([lio[1], lio[3]])
         for connection in main_connections:
             for lef, rig in connection.items():
                 idstore.extend([lef.split(' ')[0], rig.split(' ')[0]])
@@ -177,7 +229,7 @@ class MasterLoops:
 
     
     def _check_bubble(self):
-        del_num = []
+        del_bubble_num = []
         slim_connections = self.connections
         for num, connect in enumerate(slim_connections):
             for left_contig, right_contig in connect.items():
@@ -207,84 +259,120 @@ class MasterLoops:
                                 for rig in right_bubble_fact:
                                     for right_bubble_id, right_bubble_edge in rig.items():
                                         if int(left_bubble_id) == int(right_bubble_id) and left_bubble_edge != right_bubble_edge:
-                                            del_num.append(num)
-        if len(del_num) > 0:
-            for del_index in sorted(del_num, reverse=True):
+                                            del_bubble_num.append(num)
+        if len(del_bubble_num) > 0:
+            for del_index in sorted(del_bubble_num, reverse=True):
                 del slim_connections[del_index]
-        
+
+
+        contig_match_dict = {}
+        for num, connect in enumerate(slim_connections):
+            for left_contig, right_contig in connect.items():
+                left_contig_id, left_contig_edge = left_contig.split()
+                right_contig_id, right_contig_edge = right_contig.split()
+
+                if str(left_contig_id) not in contig_match_dict.keys():
+                    contig_match_dict[str(left_contig_id)] = [self.id_depth[str(right_contig_id)]]
+                else:
+                    contig_match_dict[str(left_contig_id)].append(self.id_depth[str(right_contig_id)])
+
+                if str(right_contig_id) not in contig_match_dict.keys():
+                    contig_match_dict[str(right_contig_id)] = [self.id_depth[str(left_contig_id)]]
+                else:
+                    contig_match_dict[str(right_contig_id)].append(self.id_depth[str(left_contig_id)])
+        # try:        
         del_num = []
         for num, connect in enumerate(slim_connections):
             for left_contig, right_contig in connect.items():
                 left_contig_id, left_contig_edge = left_contig.split()
                 right_contig_id, right_contig_edge = right_contig.split()
-                if float(self.id_depth[left_contig_id]) > float(self.median_depth)*3 and float(self.id_depth[right_contig_id]) > float(self.median_depth)*3:
+                l_rep_contig = self.get_final_path(left_contig_id, left_contig_edge, slim_connections, self.main_idnum)[1]
+                r_rep_contig = self.get_final_path(right_contig_id, right_contig_edge, slim_connections, self.main_idnum)[1]
 
+                if (float(self.id_depth[left_contig_id]) > float(self.median_depth)*3 or \
+                    float(self.id_depth[left_contig_id]) < float(self.median_depth)*1/3  or \
+                    float(self.id_depth[right_contig_id]) > float(self.median_depth)*3 or \
+                    float(self.id_depth[right_contig_id]) < float(self.median_depth)*1/3) and \
+                    (all(float(depth) > float(self.median_depth)*3 or float(depth) < float(self.median_depth)*1/3 for depth in contig_match_dict[l_rep_contig]) or \
+                    all(float(depth) > float(self.median_depth)*3 or float(depth) < float(self.median_depth)*1/3  for depth in contig_match_dict[r_rep_contig])): 
                     del_num.append(num)
+        # except:
+        #     log.Info("..")
         if len(del_num) > 0:
             for del_index in sorted(del_num, reverse=True):
                 del slim_connections[del_index]
+        slim_connections = self._delete_single_edge(slim_connections)[0]
+        if len(slim_connections) == 0:
+            raise Exception("PMAT unable to complete automatic loop resolution.")
+
 
         idstore = []
         for connection in slim_connections:
             for lef, rig in connection.items():
                 idstore.extend([lef.split(' ')[0], rig.split(' ')[0]])
         slim_main_idnum = dict(Counter(idstore))
-
         return slim_connections, slim_main_idnum
  
-    def get_final_path(self, utr):
+    def get_final_path(self, flag_seed, utr, dy_connectons, idnum):
         cycl = True
-        for connection in self.slim_connections:
+        for connection in dy_connectons:
             for left_contig, right_contig in connection.items():
                 left_contig_id = left_contig.strip().split()[0]
                 left_contig_edge = left_contig.strip().split()[1]
                 right_contig_id = right_contig.strip().split()[0]
                 right_contig_edge = right_contig.strip().split()[1]
-                if int(self.begin_seed) == int(left_contig_id) and left_contig_edge == utr:
-                    if self.slim_main_idnum[right_contig_id] > 2:
-                        cycl = False
-                        final_contig_id = self.begin_seed
-                        final_contig_edge = utr
-                        final_rep_contig = right_contig_id
-                        final_rep_edge = right_contig_edge
-                    else:
-                        final_contig_id = right_contig_id
-                        final_contig_edge = right_contig_edge
-                    break
-                elif int(self.begin_seed) == int(right_contig_id) and right_contig_edge == utr:
-                    if self.slim_main_idnum[left_contig_id] > 2:
-                        cycl = False
-                        final_contig_id = self.begin_seed
-                        final_contig_edge = utr
-                        final_rep_contig = left_contig_id
-                        final_rep_edge = left_contig_edge
-                    else:
-                        final_contig_id = left_contig_id
-                        final_contig_edge = left_contig_edge
-                    break
-
+                if idnum[flag_seed] > 2:
+                    cycl = False
+                    final_contig_id = flag_seed
+                    final_contig_edge = utr
+                    final_rep_contig = flag_seed
+                    final_rep_edge = utr
+                else:
+                    if int(flag_seed) == int(left_contig_id) and left_contig_edge == utr:
+                        if idnum[right_contig_id] > 2:
+                            cycl = False
+                            final_contig_id = flag_seed
+                            final_contig_edge = utr
+                            final_rep_contig = right_contig_id
+                            final_rep_edge = right_contig_edge
+                        else:
+                            final_contig_id = right_contig_id
+                            final_contig_edge = right_contig_edge
+                        break
+                    elif int(flag_seed) == int(right_contig_id) and right_contig_edge == utr:
+                        if idnum[left_contig_id] > 2:
+                            cycl = False
+                            final_contig_id = flag_seed
+                            final_contig_edge = utr
+                            final_rep_contig = left_contig_id
+                            final_rep_edge = left_contig_edge
+                        else:
+                            final_contig_id = left_contig_id
+                            final_contig_edge = left_contig_edge
+                        break
+        
         while cycl:
-            if self.slim_main_idnum[final_contig_id] > 2:
+            if idnum[final_contig_id] > 2:
                 cycl = False
-            for connection in self.slim_connections:
+            for connection in dy_connectons:
                 for left_contig, right_contig in connection.items():
                     left_contig_id = left_contig.strip().split()[0]
                     left_contig_edge = left_contig.strip().split()[1]
                     right_contig_id = right_contig.strip().split()[0]
                     right_contig_edge = right_contig.strip().split()[1]
                     if int(final_contig_id) == int(left_contig_id) and left_contig_edge != final_contig_edge:
-                        if self.slim_main_idnum[right_contig_id] == 2:
+                        if idnum[right_contig_id] == 2:
                             final_contig_id = right_contig_id
                             final_contig_edge = right_contig_edge
-                        elif self.slim_main_idnum[right_contig_id] > 2:
+                        elif idnum[right_contig_id] > 2:
                             final_rep_contig = right_contig_id
                             final_rep_edge = right_contig_edge
                             cycl = False
                     elif int(final_contig_id) == int(right_contig_id) and right_contig_edge != final_contig_edge: 
-                        if self.slim_main_idnum[left_contig_id] == 2:
+                        if idnum[left_contig_id] == 2:
                             final_contig_id = left_contig_id
                             final_contig_edge = left_contig_edge
-                        elif self.slim_main_idnum[left_contig_id] > 2:
+                        elif idnum[left_contig_id] > 2:
                             final_rep_contig = left_contig_id
                             final_rep_edge = left_contig_edge
                             cycl = False
@@ -321,11 +409,13 @@ class MasterLoops:
                     #             rep_path[seed].remove(ctg)
                     #             rep_path[seed].append(ctg)
         input_dict = rep_path
-
         keys = list(input_dict.keys())
         values = list(input_dict.values())
 
         value_permutations = [list(itertools.permutations(v)) for v in values]
+        group_num = 1
+        for permu in value_permutations:
+            group_num *= len(permu)
 
         all_combinations = []
         for permuted_values in itertools.product(*value_permutations):
@@ -336,6 +426,8 @@ class MasterLoops:
             #             permuted_dict[rep_seed].remove(ctg)
             #             permuted_dict[rep_seed].append(ctg)
             all_combinations.append(permuted_dict)
+            if len(all_combinations) == 100000:
+                break
         return all_combinations
     
     def get_final_mt(self, rep_path, begin_utr = "5'"):
@@ -445,7 +537,6 @@ class MasterLoops:
         all_combinations = self.rep_path_order()
         unrep_combinations_set = set()
         unrep_combinations_list = []
-        
         for rep_path in all_combinations:
             if str(rep_path) not in unrep_combinations_set:
                 unrep_combinations_set.add(str(rep_path))
@@ -464,10 +555,10 @@ class MasterLoops:
                 BFS_path_set.add(str(final_path))
                 BFS_path_list.append(final_path)
 
+        blur_path_flag = []
         if len(blur_flag) > 0:
             blur_path_set = set()
             blur_path_list = []
-            blur_path_flag = []
             for fg in blur_flag:
                 if int(fg[0][-1]) == int(self.final_contig_id) and fg[1]:
                     blur_path_set.add(str(fg[1]))
@@ -529,8 +620,8 @@ class MasterLoops:
             if len(blur_path_flag) > 1:
                 blur_path_flag = sorted(blur_path_flag, key=len, reverse=True)
 
+        BFS_path_final = []
         if len(BFS_path_set) > 0:
-            BFS_path_final = []
             for final_path in BFS_path_list:
                 if str(final_path) in BFS_path_set:
                     final_idstore = []

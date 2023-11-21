@@ -30,9 +30,9 @@ PMAT --help
 ```
 Install by downloading the source codes
 ```sh
-wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.5.1.tar.gz
-tar -zxvf v1.5.1.tar.gz
-cd PMAT-1.5.1/bin
+wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.5.2.tar.gz
+tar -zxvf v1.5.2.tar.gz
+cd PMAT-1.5.2/bin
 chmod a+x PMAT
 PMAT --help
 ```
@@ -59,7 +59,7 @@ usage: PMAT <command> <arguments>
 |__|       |_|    \__/    |_| /_/          \_\      |_|      
 
 PMAT            An efficient assembly toolkit for plant mitochondrial genome
-Version         1.5.1
+Version         1.5.2
 Contributors    Bi,C. and Han,F.
 Email           bichwei@njfu.edu.cn, hanfc@caf.ac.cn
 
@@ -128,6 +128,7 @@ optional arguments:
   -l MINLINK, --minLink MINLINK
                         Filter according to the minimum link depth provided by the user
   -m, --mem             Flag to keep sequence data in memory to speed up cup time
+  -u, --unloop          Flag for attempting automatic unloop
   -v, --version         show program's version and exit
 ```
 
@@ -171,6 +172,7 @@ optional arguments:
   -cpu CPU              The number of threads. Default: 8
   -s SEEDS [SEEDS ...], --seeds SEEDS [SEEDS ...]
                         ContigID for extending. Multiple contigIDs should be separated by space. For example: 1 312 356
+  -u, --unloop          Flag for attempting automatic unloop
   -l MINLINK, --minLink MINLINK
                         Filter according to the minimum link depth provided by the user
   -v, --version         show the program's version number and exit

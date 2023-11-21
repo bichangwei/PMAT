@@ -13,6 +13,7 @@ import re
 import os
 import shutil
 import argparse
+import signal
 import time
 import gzip
 if os.path.dirname(sys.argv[0]):
@@ -418,27 +419,39 @@ def gfa_result(file_data_fna_name, Output, id_length, id_depth, simple_pairs, in
                                     id_length, id_depth, simple_pairs, contig_dict).save_gfa(main_gfa, main_seeds, 'main')
         main_gfa.close()
         log.Info(f'{str(len(main_seeds))} contigs are added to a master graph')
-        if mtpt == 'mt':
-            try:
+        if args.unloop:
+            if mtpt == 'mt':
                 log.section_header("PMAT attempting automated loop resolution ...")
-                loop_result = disentangle_mitogenome_from_graph.MasterLoops(id_depth, id_length, mt_main_connections, main_output, Output).getloop()
-                if loop_result:
-                    for num, loop_connection in enumerate(loop_result):
-                        num += 1
-                        loop_output = os.path.join(Output, f'gfa_result/PMAT_{mtpt}_loop_{num}.gfa')
-                        loop_gfa = open(loop_output, 'w')
-                        assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
-                                                    id_length, id_depth, simple_pairs, contig_dict).save_loop_gfa(loop_gfa, loop_connection)
-                        loop_gfa.close()
+                class TimeoutError(Exception):
+                    pass
 
-                        loop_gfa2fa = os.path.join(Output, f'gfa_result/PMAT_{mtpt}_loop_{num}.fasta')
-                        gfa2fa.gfa2fa(loop_output, loop_gfa2fa)
+                def timeout_handler(signum, frame):
+                    raise TimeoutError("Timeout occurred. PMAT unable to complete automatic loop resolution.")
 
-                    log.Info("Automated loop resolution completed. Please perform a manual inspection.")
-                else:
-                    log.Error("Unable to generate cyclic structure.")
-            except:
-                log.Info("PMAT unable to complete automatic loop resolution.")
+                signal.signal(signal.SIGALRM, timeout_handler)
+                try:
+                    signal.alarm(600)
+                    loop_result = disentangle_mitogenome_from_graph.MasterLoops(id_depth, id_length, mt_main_connections, main_output, Output).getloop()
+                    if loop_result:
+                        for num, loop_connection in enumerate(loop_result):
+                            num += 1
+                            loop_output = os.path.join(Output, f'gfa_result/PMAT_{mtpt}_loop_{num}.gfa')
+                            loop_gfa = open(loop_output, 'w')
+                            assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
+                                                        id_length, id_depth, simple_pairs, contig_dict).save_loop_gfa(loop_gfa, loop_connection)
+                            loop_gfa.close()
+
+                            loop_gfa2fa = os.path.join(Output, f'gfa_result/PMAT_{mtpt}_loop_{num}.fasta')
+                            gfa2fa.gfa2fa(loop_output, loop_gfa2fa)
+
+                        log.Info("Automatic unlooping completed. Please verify manually.")
+                    else:
+                        log.Error("Unable to generate circular structure.")
+                    signal.alarm(0)
+                except TimeoutError:
+                    log.Error("Timeout: PMAT unable to complete automatic unlooping.")
+                except:
+                    log.Error("PMAT unable to complete automatic unlooping.")
     else:
         log.Error('There is no master structure for this seeds extension result.')
 
@@ -617,6 +630,8 @@ if __name__ == '__main__':
                                 help='Filter according to the minimum link depth provided by the user')
     optional_group.add_argument("-m", "--mem", action="store_true", required=False,
                                 help='Flag to keep sequence data in memory to speed up cup time')
+    optional_group.add_argument("-u", "--unloop", action="store_true", required=False,
+                                help='Flag for attempting automatic unloop')
     optional_group.add_argument('-v', '--version', action='version', version='PMAT v' + __version__,)
     autoMito_sub._action_groups.append(optional_group)
     autoMito_sub.set_defaults(func=autoMito)
@@ -649,6 +664,8 @@ if __name__ == '__main__':
                                 help='cpus to use. Default: 8')
     optional_group.add_argument("-s","--seeds",required=False, nargs='+',
                                 help='ContigID for extending. Multiple contigIDs should be separated by space. For example: 1 312 356')
+    optional_group.add_argument("-u", "--unloop", action="store_true", required=False,
+                                help='Flag for attempting automatic unloop')
     # optional_group.add_argument("-l","--minLen", type=int, required=False, default=100, 
     #                             help='Filter according to the minimum contig length provided by the user')
     #***# optional_group.add_argument("-p","--minPath", type=int, required=False, 
