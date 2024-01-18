@@ -42,7 +42,7 @@ PMAT --help
 - [**BLASTn**](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)  Needs to be installed in `PATH`.
 - [**Singularity**](https://github.com/YanshuQu/runAssembly) is required for PMAT versions earlier than 1.30. You can find installation instructions [here](https://github.com/YanshuQu/runAssembly).
 - [**Apptainer**](https://github.com/apptainer/apptainer/blob/main/INSTALL.md) is required for PMAT versions 1.30 and later. Installation instructions can be found [here](https://github.com/apptainer/apptainer/blob/main/INSTALL.md).
-- [**Canu**](https://github.com/marbl/canu) or [**NextDenovo**](https://github.com/Nextomics/NextDenovo) is required for CLR or ONT sequencing data, which is suggested to be installed in `PATH`.
+- [**Canu > v2.0**](https://github.com/marbl/canu) or [**NextDenovo**](https://github.com/Nextomics/NextDenovo) is required for CLR or ONT sequencing data, which is suggested to be installed in `PATH`.
 
 ## <a name="C3">Options and usage</a>
 
@@ -59,7 +59,7 @@ usage: PMAT <command> <arguments>
 |__|       |_|    \__/    |_| /_/          \_\      |_|      
 
 PMAT            An efficient assembly toolkit for plant mitochondrial genome
-Version         1.5.2
+Version         1.5.3
 Contributors    Bi,C. and Han,F.
 Email           bichwei@njfu.edu.cn, hanfc@caf.ac.cn
 
@@ -128,7 +128,6 @@ optional arguments:
   -l MINLINK, --minLink MINLINK
                         Filter according to the minimum link depth provided by the user
   -m, --mem             Flag to keep sequence data in memory to speed up cup time
-  -u, --unloop          Flag for attempting automatic unloop
   -v, --version         show program's version and exit
 ```
 
@@ -172,7 +171,6 @@ optional arguments:
   -cpu CPU              The number of threads. Default: 8
   -s SEEDS [SEEDS ...], --seeds SEEDS [SEEDS ...]
                         ContigID for extending. Multiple contigIDs should be separated by space. For example: 1 312 356
-  -u, --unloop          Flag for attempting automatic unloop
   -l MINLINK, --minLink MINLINK
                         Filter according to the minimum link depth provided by the user
   -v, --version         show the program's version number and exit
@@ -264,9 +262,6 @@ PMAT autoMito -i SRR12202038_1.fastq.gz -o ./test_ont -st ont -g 430m -cs nextDe
   - `*/assembly_result/PMAT_pt_master.gfa`, The optimized assembly graph of the chloroplast genome
 
 ## <a name="C8">Version</a>
-PMAT version 1.5.0 (23/11/14)</br>
-Updates:
-- In this version, PMAT adds a new script "disentangle_mitogenome_from_graph.py" to export all possible conformations in FASTA files.
 
 PMAT version 1.4.0 (23/11/12)</br>
 Updates:
@@ -279,7 +274,7 @@ Updates:
 
 
 ## <a name="C9">Citing PMAT</a>
-Bi C, Shen F, Han F, Qu Y, et al. PMAT: an efficient plant mitogenome assembly toolkit using ultra-low coverage HiFi sequencing data. Horticulture Research. Accepted </br>
+Bi C, Shen F, Han F, Qu Y, et al. PMAT: an efficient plant mitogenome assembly toolkit using ultra-low coverage HiFi sequencing data. Horticulture Research, Accepted. </br>
 Bi C, Qu Y, Hou J, Wu K, Ye N, and Yin T. (2022). Deciphering the multi-chromosomal mitochondrial genome of Populus simonii. Front. Plant Sci. 13:914635.doi:10.3389/fpls.2022.914635.
 ## Author
 Changwei Bi, bichwei@njfu.edu.cn  
