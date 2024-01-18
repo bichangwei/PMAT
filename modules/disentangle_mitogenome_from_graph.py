@@ -82,7 +82,7 @@ class MasterLoops:
             blastn_out, blastn_err = Blastn_process.communicate(timeout=None) 
             return blastn_out
     
-    def condidate_seeds(self, qryseq):
+    def candidate_seeds(self, qryseq):
         #Find the target contig
         PCGs_len = self._PCGs_length()
         blast_info = [] # [['atp1', 'contig00001', '90.9', '501'], ['apt2', 'contig00002', '891', '1030'] ...]
@@ -114,7 +114,7 @@ class MasterLoops:
                     if re.match('S', line):
                         lines = line.strip().split()
                         wf.write('>{}\n{}\n'.format(lines[1], lines[2]))
-        blast_info = self.condidate_seeds(temp_file)
+        blast_info = self.candidate_seeds(temp_file)
         if len(blast_info) > 0:
             main_depth = {seed: self.id_depth[seed] for seed in blast_info}
             sorted_value = sorted(main_depth.items(), key=lambda x: x[1])

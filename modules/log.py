@@ -24,30 +24,25 @@ class Log:
         print(message, file=sys.stdout, flush=True, end='\n')
 
     def Info(self, message=''):
-        time = self.get_timestamp()
-        time_str = self.dim(time)
+        time_str = self.get_timestamp()
         print('[' + self.bold_blue(' INFO ') + time_str + ' ] ' + message, file=sys.stdout, flush=True, end='\n')
 
     def Error(self, message=''):
-        time = self.get_timestamp()
-        time_str = self.dim(time)
+        time_str = self.get_timestamp()
         print('[' + self.bold_purple(' ERROR ') + time_str + ' ] ' + message, file=sys.stderr, flush=True, end='\n')
 
     def Warning(self, message=''):
-        time = self.get_timestamp()
-        time_str = self.dim(time)
+        time_str = self.get_timestamp()
         print('[' + self.bold_purple(' WARNING ') + time_str + ' ] ' + message, file=sys.stderr, flush=True, end='\n')
         sys.exit()
 
     def section_header(self, text):
-        time = self.get_timestamp()
-        time_str = self.dim(time)
+        time_str = self.get_timestamp()
         header = self.bold_blue(text)
         print(header + '\n' + time_str, file=sys.stdout, flush=True)
 
     def section_tail(self, text):
-        time = self.get_timestamp()
-        time_str = self.dim(time)
+        time_str = self.get_timestamp()
         tail = self.bold_blue(text)
         print(tail + '\n' + time_str, file=sys.stdout, flush=True)
 

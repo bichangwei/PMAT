@@ -128,6 +128,10 @@ class ReadsPreprocess:
         trim_process.communicate()
         # trimlog.close()
 
+        if not os.path.exists(f'{self.output_path}/trim_out/PMAT.trimmedReads.fasta.gz'):
+            log.Warning("An error occurred during the trim process?")
+
+
         log.section_tail("Reads trim end.")
         log.get_path(f'Reads trim result : {self.output_path}/trim_out')
 

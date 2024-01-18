@@ -32,8 +32,8 @@ else:
             print('[' + ' \033[1m\033[35mWARNING\033[0m' + ' ] ' + message, file=sys.stderr, flush=True, end='\n')
             sys.exit()
 
-import find_condidate_seeds
-import find_condidate_seeds_pt
+import find_candidate_seeds
+import find_candidate_seeds_pt
 import seeds_extension
 import assembly_graph
 from check_file import check_file_format, check_file_path, mkdir_file_path
@@ -106,6 +106,10 @@ def autoMito(args):
         readstype = 'nanopore'
     elif args.seqtype.lower() == 'clr':
         readstype = 'pacbio'
+    elif args.seqtype.lower() == 'hifi':
+        readstype = 'hifi'
+    else:
+        log.warning('Unsupported read type. Please choose from HiFi, ONT, or CLR.')
 
 
     if args.seqtype.lower() == 'hifi':
@@ -119,7 +123,7 @@ def autoMito(args):
                     high_quality_seq = correct_sequences.ReadsPreprocess(CANU_PATH, args.cpu, readstype, Output, args.correctcfg).NextDenovo_correct(NEXTDENOVO_PATH)
                 else:
                     log.Warning('Missing config file, which was required parament when using nextDenovo to correct errors')
-            elif args.correctsoft == 'canu':
+            elif args.correctsoft.lower() == 'canu':
                 if check_file_format(args.input) != 'fastq' and check_file_format(args.input) != 'fasta':
                     log.Warning('Please input the raw data')
                 else:
@@ -165,7 +169,7 @@ def autoMito(args):
     # longest_contig, longest_len = list(sorted(id_length.items(), key= lambda item: item[1], reverse=True))[0]
     log.Info(f'Contig number  : {len(simple_pairs)}')
     log.Info(f'Longest Contig : contig{longest_contig} {id_length[str(longest_contig)]}bp')
-    log.Info(log.dim('-'*60))
+    log.Info('-'*60)
 
     if getattr(args, 'minLink', None):
         minLink = args.minLink
@@ -179,9 +183,9 @@ def autoMito(args):
 
     if mttype:
         proleptic_connections = []
-        mt_condidate_seeds = process_candidate_seeds(simple_pairs, id_length, find_condidate_seeds.SeedFinder, file_data_fna_name, id_depth, Output)
-        mt_dynamic_sampleIDs = mt_condidate_seeds
-        mt_initial_seeds, mt_main_seeds, raw_seeds,  initial_connections = extend_seeds(mt_condidate_seeds, all_connections, id_depth, 
+        mt_candidate_seeds = process_candidate_seeds(simple_pairs, id_length, find_candidate_seeds.SeedFinder, file_data_fna_name, id_depth, Output)
+        mt_dynamic_sampleIDs = mt_candidate_seeds
+        mt_initial_seeds, mt_main_seeds, raw_seeds,  initial_connections = extend_seeds(mt_candidate_seeds, all_connections, id_depth, 
                                                                                         id_length, link_depth, mt_dynamic_sampleIDs, 
                                                                                         simple_pairs, proleptic_connections, minLink, 
                                                                                         nucl_contig_depth, file_data_fna_name, id_seq, "mt", 2)
@@ -191,9 +195,9 @@ def autoMito(args):
 
     if pttype:
         proleptic_connections = []
-        pt_condidate_seeds = process_candidate_seeds(simple_pairs, id_length, find_condidate_seeds_pt.SeedFinder, file_data_fna_name, id_depth, Output)
-        pt_dynamic_sampleIDs = pt_condidate_seeds
-        pt_initial_seeds, pt_main_seeds, raw_seeds ,initial_connections = extend_seeds(pt_condidate_seeds, all_connections, id_depth, 
+        pt_candidate_seeds = process_candidate_seeds(simple_pairs, id_length, find_candidate_seeds_pt.SeedFinder, file_data_fna_name, id_depth, Output)
+        pt_dynamic_sampleIDs = pt_candidate_seeds
+        pt_initial_seeds, pt_main_seeds, raw_seeds ,initial_connections = extend_seeds(pt_candidate_seeds, all_connections, id_depth, 
                                                                                         id_length, link_depth, pt_dynamic_sampleIDs, 
                                                                                         simple_pairs, proleptic_connections, minLink, 
                                                                                         nucl_contig_depth, file_data_fna_name, id_seq, "pt", 10)
@@ -264,7 +268,7 @@ def graphBuild(args):
     # longest_contig, longest_len = list(sorted(id_length.items(), key= lambda item: item[1], reverse=True))[0]
     log.Info(f'Contig number : {len(simple_pairs)}')
     log.Info(f'Longest Contig : contig{longest_contig} {id_length[str(longest_contig)]}bp')
-    log.Info(log.dim('-'*60))
+    log.Info('-'*60)
 
     # Determine if the user provides parameters for minLink
     if getattr(args, 'minLink', None):
@@ -278,29 +282,25 @@ def graphBuild(args):
     if mttype:
         proleptic_connections = []
         if args.seeds:
-            mt_condidate_seeds = args.seeds
-            log.Info(f'SeedIDs for extending : {str(set(mt_condidate_seeds))}')
-            if len(mt_condidate_seeds) == 1:
-                for condidate_seed in mt_condidate_seeds:
-                    print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="\n")
-            else:
-                for n, condidate_seed in enumerate(mt_condidate_seeds):
-                    if n == 0:
-                        print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="  ")
-                        time.sleep(0.1)
-                    elif n+1 < len(mt_condidate_seeds):
-                        print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="  ")
-                        time.sleep(0.1)
-                    else:
-                        print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="\n")
-                        time.sleep(0.1)
-                pass
-            log.Info(log.dim('-'*60))
+            mt_candidate_seeds = args.seeds
+            for tem_candidate in mt_candidate_seeds:
+                if str(tem_candidate) not in simple_pairs.keys():
+                    log.Warning(f'{tem_candidate} not found?')
+
+            log.Info(f'SeedIDs for extending : {str(set(mt_candidate_seeds))}')
+            log.log(f'Contigs\tLength\tDepth')
+            log.log('——————————————————————')
+            if len(mt_candidate_seeds) > 0:
+                for candidate_seed in mt_candidate_seeds:
+                    print(f'{simple_pairs[str(candidate_seed)]}\t{id_length[str(candidate_seed)]}bp\t{id_depth[str(candidate_seed)]}X', file=sys.stdout, flush=True, end="\n")
+                    time.sleep(0.1)
+                    
+            log.Info('-'*60)
         else:
-            mt_condidate_seeds = process_candidate_seeds(simple_pairs, id_length, find_condidate_seeds.SeedFinder, file_data_fna_name, id_depth, Output)
+            mt_candidate_seeds = process_candidate_seeds(simple_pairs, id_length, find_candidate_seeds.SeedFinder, file_data_fna_name, id_depth, Output)
             
-        mt_dynamic_sampleIDs = mt_condidate_seeds
-        mt_initial_seeds, mt_main_seeds, raw_seeds,  initial_connections = extend_seeds(mt_condidate_seeds, all_connections, id_depth, 
+        mt_dynamic_sampleIDs = mt_candidate_seeds
+        mt_initial_seeds, mt_main_seeds, raw_seeds,  initial_connections = extend_seeds(mt_candidate_seeds, all_connections, id_depth, 
                                                                                         id_length, link_depth, mt_dynamic_sampleIDs, 
                                                                                         simple_pairs, proleptic_connections, minLink, 
                                                                                         nucl_contig_depth, file_data_fna_name, id_seq, "mt", 2)
@@ -310,10 +310,10 @@ def graphBuild(args):
         
     if pttype:
         proleptic_connections = []
-        pt_condidate_seeds = process_candidate_seeds(simple_pairs, id_length, find_condidate_seeds_pt.SeedFinder, file_data_fna_name, id_depth, Output)
+        pt_candidate_seeds = process_candidate_seeds(simple_pairs, id_length, find_candidate_seeds_pt.SeedFinder, file_data_fna_name, id_depth, Output)
 
-        pt_dynamic_sampleIDs = pt_condidate_seeds
-        pt_initial_seeds, pt_main_seeds, raw_seeds ,initial_connections = extend_seeds(pt_condidate_seeds, all_connections, id_depth, 
+        pt_dynamic_sampleIDs = pt_candidate_seeds
+        pt_initial_seeds, pt_main_seeds, raw_seeds ,initial_connections = extend_seeds(pt_candidate_seeds, all_connections, id_depth, 
                                                                                         id_length, link_depth, pt_dynamic_sampleIDs, 
                                                                                         simple_pairs, proleptic_connections, minLink, 
                                                                                         nucl_contig_depth, file_data_fna_name, id_seq, "pt", 10)
@@ -330,37 +330,32 @@ def graphBuild(args):
 
 def process_candidate_seeds(simple_pairs, id_length, seed_finder_class, file_data_fna_name, id_depth, Output):
         log.section_header("Candidate seeds search start ...")
-        candidate_seeds = seed_finder_class(file_data_fna_name, id_depth, Output).condidate_seeds()
+        candidate_seeds = seed_finder_class(file_data_fna_name, id_depth, Output).candidate_seeds()
         log.Info(f"{len(candidate_seeds)} contigs are used as candidate seeds")
 
-        for n, condidate_seed in enumerate(candidate_seeds):
-        # simple_pairs[str(condidate_seed)] = 'contig' + condidate_seed
-            if n == 0:
-                print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="  ")
+        log.log(f'Contigs\tLength\tDepth')
+        log.log('——————————————————————')
+        if len(candidate_seeds) > 0:
+            for candidate_seed in candidate_seeds:
+                print(f'{simple_pairs[str(candidate_seed)]}\t{id_length[str(candidate_seed)]}bp\t{id_depth[str(candidate_seed)]}X', file=sys.stdout, flush=True, end="\n")
                 time.sleep(0.1)
-            elif n+1 < len(candidate_seeds):
-                print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="  ")
-                time.sleep(0.1)
-            else:
-                print(f'{log.bold_green(simple_pairs[str(condidate_seed)])}: {id_length[str(condidate_seed)]}bp {id_depth[str(condidate_seed)]}X', file=sys.stdout, flush=True, end="\n")
-                time.sleep(0.1)
-        log.Info(log.dim('-'*60))
+        log.Info('-'*60)
 
         return candidate_seeds
 
-def extend_seeds(condidate_seeds, all_connections, id_depth, id_length, link_depth, pt_dynamic_sampleIDs, simple_pairs, proleptic_connections, min_link, nucl_contig_depth, file_data_fna_name, id_seq, mtpt, dep):
+def extend_seeds(candidate_seeds, all_connections, id_depth, id_length, link_depth, pt_dynamic_sampleIDs, simple_pairs, proleptic_connections, min_link, nucl_contig_depth, file_data_fna_name, id_seq, mtpt, dep):
     log.section_header("Seeds extension start ...")
     initial_connections = seeds_extension.Extend_seeds(all_connections, id_depth, id_length, link_depth, 
                                                         pt_dynamic_sampleIDs, simple_pairs, proleptic_connections, 
                                                         min_link, nucl_contig_depth, mtpt).update_seed_extend()  # The list stores contig connections
     log.section_tail("Seeds extension end ...")
-    log.Info(log.dim('-'*60))
+    log.Info('-'*60)
 
     initial_seeds = assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
                                                 id_length, id_depth, simple_pairs).Target_seeds('init')
     
     raw_add = []
-    for candidate_seed in condidate_seeds:
+    for candidate_seed in candidate_seeds:
         if str(candidate_seed) not in initial_seeds and float(id_depth[str(candidate_seed)]) > nucl_contig_depth * dep:
             raw_add.append(candidate_seed)
 
@@ -419,39 +414,39 @@ def gfa_result(file_data_fna_name, Output, id_length, id_depth, simple_pairs, in
                                     id_length, id_depth, simple_pairs, contig_dict).save_gfa(main_gfa, main_seeds, 'main')
         main_gfa.close()
         log.Info(f'{str(len(main_seeds))} contigs are added to a master graph')
-        if args.unloop:
-            if mtpt == 'mt':
-                log.section_header("PMAT attempting automated loop resolution ...")
-                class TimeoutError(Exception):
-                    pass
+        # if args.unloop:
+        #     if mtpt == 'mt':
+        #         log.section_header("PMAT attempting automated loop resolution ...")
+        #         class TimeoutError(Exception):
+        #             pass
 
-                def timeout_handler(signum, frame):
-                    raise TimeoutError("Timeout occurred. PMAT unable to complete automatic loop resolution.")
+        #         def timeout_handler(signum, frame):
+        #             raise TimeoutError("Timeout occurred. PMAT unable to complete automatic loop resolution.")
 
-                signal.signal(signal.SIGALRM, timeout_handler)
-                try:
-                    signal.alarm(600)
-                    loop_result = disentangle_mitogenome_from_graph.MasterLoops(id_depth, id_length, mt_main_connections, main_output, Output).getloop()
-                    if loop_result:
-                        for num, loop_connection in enumerate(loop_result):
-                            num += 1
-                            loop_output = os.path.join(Output, f'gfa_result/PMAT_{mtpt}_loop_{num}.gfa')
-                            loop_gfa = open(loop_output, 'w')
-                            assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
-                                                        id_length, id_depth, simple_pairs, contig_dict).save_loop_gfa(loop_gfa, loop_connection)
-                            loop_gfa.close()
+        #         signal.signal(signal.SIGALRM, timeout_handler)
+        #         try:
+        #             signal.alarm(600)
+        #             loop_result = disentangle_mitogenome_from_graph.MasterLoops(id_depth, id_length, mt_main_connections, main_output, Output).getloop()
+        #             if loop_result:
+        #                 for num, loop_connection in enumerate(loop_result):
+        #                     num += 1
+        #                     loop_output = os.path.join(Output, f'gfa_result/PMAT_{mtpt}_loop_{num}.gfa')
+        #                     loop_gfa = open(loop_output, 'w')
+        #                     assembly_graph.AssemblyGraph(initial_connections, file_data_fna_name, 
+        #                                                 id_length, id_depth, simple_pairs, contig_dict).save_loop_gfa(loop_gfa, loop_connection)
+        #                     loop_gfa.close()
 
-                            loop_gfa2fa = os.path.join(Output, f'gfa_result/PMAT_{mtpt}_loop_{num}.fasta')
-                            gfa2fa.gfa2fa(loop_output, loop_gfa2fa)
+        #                     loop_gfa2fa = os.path.join(Output, f'gfa_result/PMAT_{mtpt}_loop_{num}.fasta')
+        #                     gfa2fa.gfa2fa(loop_output, loop_gfa2fa)
 
-                        log.Info("Automatic unlooping completed. Please verify manually.")
-                    else:
-                        log.Error("Unable to generate circular structure.")
-                    signal.alarm(0)
-                except TimeoutError:
-                    log.Error("Timeout: PMAT unable to complete automatic unlooping.")
-                except:
-                    log.Error("PMAT unable to complete automatic unlooping.")
+        #                 log.Info("Automatic unlooping completed. Please verify manually.")
+        #             else:
+        #                 log.Error("Unable to generate circular structure.")
+        #             signal.alarm(0)
+        #         except TimeoutError:
+        #             log.Error("Timeout: PMAT unable to complete automatic unlooping.")
+        #         except:
+        #             log.Error("PMAT unable to complete automatic unlooping.")
     else:
         log.Error('There is no master structure for this seeds extension result.')
 
@@ -630,8 +625,8 @@ if __name__ == '__main__':
                                 help='Filter according to the minimum link depth provided by the user')
     optional_group.add_argument("-m", "--mem", action="store_true", required=False,
                                 help='Flag to keep sequence data in memory to speed up cup time')
-    optional_group.add_argument("-u", "--unloop", action="store_true", required=False,
-                                help='Flag for attempting automatic unloop')
+    # optional_group.add_argument("-u", "--unloop", action="store_true", required=False,
+    #                             help='Flag for attempting automatic unloop')
     optional_group.add_argument('-v', '--version', action='version', version='PMAT v' + __version__,)
     autoMito_sub._action_groups.append(optional_group)
     autoMito_sub.set_defaults(func=autoMito)
@@ -664,8 +659,8 @@ if __name__ == '__main__':
                                 help='cpus to use. Default: 8')
     optional_group.add_argument("-s","--seeds",required=False, nargs='+',
                                 help='ContigID for extending. Multiple contigIDs should be separated by space. For example: 1 312 356')
-    optional_group.add_argument("-u", "--unloop", action="store_true", required=False,
-                                help='Flag for attempting automatic unloop')
+    # optional_group.add_argument("-u", "--unloop", action="store_true", required=False,
+    #                             help='Flag for attempting automatic unloop')
     # optional_group.add_argument("-l","--minLen", type=int, required=False, default=100, 
     #                             help='Filter according to the minimum contig length provided by the user')
     #***# optional_group.add_argument("-p","--minPath", type=int, required=False, 
@@ -679,6 +674,9 @@ if __name__ == '__main__':
     #----------------------------------------------------------------------------------------
 
     args=parser.parse_args()
+
+    if not shutil.which('blastn'):
+        log.Warning('Please check if blastn is available in the PATH.')
 
     if len(vars(args)) == 0:
         parser.print_help()

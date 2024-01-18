@@ -74,7 +74,7 @@ class SeedFinder:
         # Check if child process has terminated. Set and return returncode attribute. Otherwise, returns None.
         # while Blastn_process.poll() is None:
         #     elapsed_time = time.time() - start_time
-        #     print(f">>>>>> Find condidate seeds for {elapsed_time:.2f}s <<<<<<", end="\r")
+        #     print(f">>>>>> Find candidate seeds for {elapsed_time:.2f}s <<<<<<", end="\r")
         #     time.sleep(0.1)
         
         # end_time = time.time()
@@ -90,23 +90,26 @@ class SeedFinder:
         return blastn_out
 
 
-    def condidate_seeds(self):
+    def candidate_seeds(self):
         #Find the target contig
         PCGs_len = self.PCGs_len
         blast_info = [] # [['atp1', 'contig00001', '90.9', '501'], ['apt2', 'contig00002', '891', '1030'] ...]
         redundant_seed = set()
-        with open(f'{self.output_path}/PMAT_mt_blastn.txt', 'w') as blt:
-            for line in self.blastn_out.decode().splitlines():
-                blt.write(line+'\n')
-                lines = line.split()
-                PCGs = re.sub(r".*_", "", lines[1])
-                PCGs = re.sub(r"-.*", "", PCGs)
-                # select contigs
-                if PCGs in self.PCGs_exon and int(lines[3]) > 500 and float(lines[2]) > 0.85:
-                    redundant_seed.add(re.sub("contig0*", "", lines[0]))
-                    
-                elif PCGs in PCGs_len.keys() and int(lines[3]) > float(PCGs_len[PCGs]) * 0.9 and float(lines[2]) > 0.95:
-                    blast_info.append([PCGs, lines[0], lines[2], lines[3]])
+        if len(self.blastn_out.decode().splitlines()) > 0:
+            with open(f'{self.output_path}/PMAT_mt_blastn.txt', 'w') as blt:
+                for line in self.blastn_out.decode().splitlines():
+                    blt.write(line+'\n')
+                    lines = line.split()
+                    PCGs = re.sub(r".*_", "", lines[1])
+                    PCGs = re.sub(r"-.*", "", PCGs)
+                    # select contigs
+                    if PCGs in self.PCGs_exon and int(lines[3]) > 500 and float(lines[2]) > 0.85:
+                        redundant_seed.add(re.sub("contig0*", "", lines[0]))
+                        
+                    elif PCGs in PCGs_len.keys() and int(lines[3]) > float(PCGs_len[PCGs]) * 0.9 and float(lines[2]) > 0.95:
+                        blast_info.append([PCGs, lines[0], lines[2], lines[3]])
+        else:
+            log.Warning("No matching candidate contigs found. Please use the graphBuild program to manually modify the --seeds.")
 
         PCG_contigs = {} # {'apt1': ("contig00001",“”contig00007")， 'atp2': ("contig000012", "contig000003")...}
         blast_ident = {} # {"contig00001":"90.9", "contig00002":"89.1", "contig000010":"99.3"...}
@@ -136,9 +139,9 @@ class SeedFinder:
             elif len(contigs) == 1:
                 redundant_seed.add(re.sub(r"contig0*", "", contigs.pop()))
         # Sorting according to the contig depth of contig
-        condidate_seed = sorted(list(redundant_seed), key=lambda x: float(self.id_depth[str(x)]), reverse=True)
-        # log(f"{len(condidate_seed)} contigs are used as candidate seeds")
-        return condidate_seed
+        candidate_seed = sorted(list(redundant_seed), key=lambda x: float(self.id_depth[str(x)]), reverse=True)
+        # log(f"{len(candidate_seed)} contigs are used as candidate seeds")
+        return candidate_seed
 
 if __name__ == '__main__':
     parser=argparse.ArgumentParser(description="Used to view blastn output results")

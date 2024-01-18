@@ -54,8 +54,6 @@ def run_Assembly(cpu, assembly_seq, output_path, mi=90, ml=40, mem=None):
         # runAssemblylog.write(line.decode().strip().replace('\r', '')+'\n')
     runAssembly_process.communicate()
 
-    log.section_tail("Reads assembly end.")
-    log.get_path(f'Assembly results path: {runAssembly_output}')
 
     if os.path.exists(f'{runAssembly_output}/454AllContigs.fna') and os.path.exists(f'{runAssembly_output}/454ContigGraph.txt'):
         rename_file(f'{runAssembly_output}/454AllContigs.fna', f'{runAssembly_output}/PMATAllContigs.fna')
@@ -71,6 +69,9 @@ def run_Assembly(cpu, assembly_seq, output_path, mi=90, ml=40, mem=None):
             elif os.path.isdir(rmopt):
                 remove_dir(rmopt)
         log.Warning("Data assembly error: Please change the -fc or -sd option.")
+
+    log.section_tail("Reads assembly end.")
+    log.get_path(f'Assembly results path: {runAssembly_output}')
 
     assembly_output = runAssembly_output
 

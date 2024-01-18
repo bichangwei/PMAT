@@ -45,7 +45,7 @@ class SeedFinder:
         # Check if child process has terminated. Set and return returncode attribute. Otherwise, returns None.
         # while Blastn_process.poll() is None:
         #     elapsed_time = time.time() - start_time
-        #     print(f">>>>>> Find condidate seeds for {elapsed_time:.2f}s <<<<<<", end="\r")
+        #     print(f">>>>>> Find candidate seeds for {elapsed_time:.2f}s <<<<<<", end="\r")
         #     time.sleep(0.1)
         
         # end_time = time.time()
@@ -56,24 +56,26 @@ class SeedFinder:
         blastn_out, blastn_err = Blastn_process.communicate(timeout=None) 
 
         # Error output
-        if blastn_err:
-            print('\nBLASTn encountered an error:\n' + blastn_err.decode())
+        # if blastn_err:
+        #     print('\nBLASTn encountered an error:\n' + blastn_err.decode())
         return blastn_out
 
 
-    def condidate_seeds(self):
+    def candidate_seeds(self):
         #Find the target contig
         redundant_seed = set()
-        with open(f'{self.output_path}/PMAT_pt_blastn.txt', 'w') as blt:
-            for line in self.blastn_out.decode().splitlines():
-                blt.write(line+'\n')
-                lines = line.split()
-                # select contigs
-                if int(lines[3]) > 500 and float(lines[2]) > 0.7:
-                    redundant_seed.add(re.sub("contig0*", "", lines[0]))
-
+        if len(self.blastn_out.decode().splitlines()) > 0:
+            with open(f'{self.output_path}/PMAT_pt_blastn.txt', 'w') as blt:
+                    for line in self.blastn_out.decode().splitlines():
+                        blt.write(line+'\n')
+                        lines = line.split()
+                        # select contigs
+                        if int(lines[3]) > 500 and float(lines[2]) > 0.7:
+                            redundant_seed.add(re.sub("contig0*", "", lines[0]))
+        else:
+            log.Warning("No matching candidate contigs found. Please use the graphBuild program to manually modify the --seeds.")
         
         # Sorting according to the contig depth of contig
-        condidate_seed = sorted(list(redundant_seed), key=lambda x: float(self.id_depth[str(x)]), reverse=True)
-        # log(f"{len(condidate_seed)} contigs are used as candidate seeds")
-        return condidate_seed
+        candidate_seed = sorted(list(redundant_seed), key=lambda x: float(self.id_depth[str(x)]), reverse=True)
+        # log(f"{len(candidate_seed)} contigs are used as candidate seeds")
+        return candidate_seed
