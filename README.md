@@ -1,3 +1,6 @@
+# <p name="h1">Special Tips</p>
+If you encounter any problems in using PMAT, please contact the authors by e-mail (Changwei Bi: bichwei@njfu.edu.cn; Fuchuan Han: hanfc@caf.ac.cn) to join the WeChat group (please note your name + organization + PMAT in the message).
+
 # <p name="h1">PMAT</p> 
 An efficient assembly toolkit for plant mitochondrial genome
 <p align="center"><img src="misc/logo.png" alt="PMAT" width="600"></p>
