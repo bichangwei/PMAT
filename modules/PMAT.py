@@ -603,7 +603,7 @@ if __name__ == '__main__':
                                 help='Subset extraction of error-corrected ONT, CLR or HiFi data. Sampling ratio factor in 0-1. Default=1')
     # optional_group.add_argument('-rn', '--random', type=int, required=False, default=6,
     #                             help='Random number seeding when extracting subsets. Default:6')
-    optional_group.add_argument('-sd', '--subseed', required=False, default=6,
+    optional_group.add_argument('-sd', '--subseed', type=int, required=False, default=6,
                                 help='Sampling set random number seeds, Default=6')
     # optional_group.add_argument('-tl', '--trimlen', type=int, required=False, default=500,
     #                             help='ignore reads with length < this. Default: 500')
