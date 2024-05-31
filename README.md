@@ -33,19 +33,19 @@ PMAT --help
 ```
 Install by downloading the source codes
 ```sh
-wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.5.2.tar.gz
-tar -zxvf v1.5.2.tar.gz
-cd PMAT-1.5.2/bin
+wget https://github.com/bichangwei/PMAT/archive/refs/tags/v1.5.3.tar.gz
+tar -zxvf v1.5.3.tar.gz
+cd PMAT-1.5.3/bin
 chmod a+x PMAT
 PMAT --help
 ```
 
 ## <a name="C2">Requirement</a>
 
-- [**BLASTn**](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)  Needs to be installed in `PATH`.
+- [**BLASTn**](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download)  is required to be installed in `PATH`.
 - [**Singularity**](https://github.com/YanshuQu/runAssembly) is required for PMAT versions earlier than 1.30. You can find installation instructions [here](https://github.com/YanshuQu/runAssembly).
 - [**Apptainer**](https://github.com/apptainer/apptainer/blob/main/INSTALL.md) is required for PMAT versions 1.30 and later. Installation instructions can be found [here](https://github.com/apptainer/apptainer/blob/main/INSTALL.md).
-- [**Canu > v2.0**](https://github.com/marbl/canu) or [**NextDenovo**](https://github.com/Nextomics/NextDenovo) is required for CLR or ONT sequencing data, which is suggested to be installed in `PATH`.
+- [**Canu > v2.0**](https://github.com/marbl/canu) or [**NextDenovo**](https://github.com/Nextomics/NextDenovo) is required for CLR or ONT sequencing data.
 
 ## <a name="C3">Options and usage</a>
 
