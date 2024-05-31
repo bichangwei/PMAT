@@ -277,8 +277,8 @@ Updates:
 
 
 ## <a name="C9">Citing PMAT</a>
-Bi C, Shen F, Han F, Qu Y, et al. PMAT: an efficient plant mitogenome assembly toolkit using ultra-low coverage HiFi sequencing data. Horticulture Research, Accepted. </br>
-Bi C, Qu Y, Hou J, Wu K, Ye N, and Yin T. (2022). Deciphering the multi-chromosomal mitochondrial genome of Populus simonii. Front. Plant Sci. 13:914635.doi:10.3389/fpls.2022.914635.
+Bi C, Shen F, Han F, Qu Y, Hou J, Xu K, Xu LA, He W, Wu Z, Yin T. PMAT: an efficient plant mitogenome assembly toolkit using low-coverage HiFi sequencing data. Hortic Res. 2024, 11(3):uhae023. doi: 10.1093/hr/uhae023. </br>
+Bi C, Qu Y, Hou J, Wu K, Ye N, and Yin T. Deciphering the multi-chromosomal mitochondrial genome of Populus simonii. Front. Plant Sci. 2022, 13:914635.doi:10.3389/fpls.2022.914635.
 ## Author
 Changwei Bi, bichwei@njfu.edu.cn  
 Fuchuan Han, hanfc@caf.ac.cn
